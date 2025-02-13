@@ -243,13 +243,32 @@ export const TextEditor = () => {
   };
 
   const handleReplace = () => {
-    if (!searchTerm) return;
+    if (!searchTerm) {
+      toast({
+        title: "Search term required",
+        description: "Please enter a search term before replacing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const regex = new RegExp(searchTerm, 'gi');
+    const matchCount = (text.match(regex) || []).length;
+    
+    if (matchCount === 0) {
+      toast({
+        title: "No matches found",
+        description: `No occurrences of "${searchTerm}" were found in the text.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     const newText = text.replace(regex, replaceText);
     setText(newText);
     toast({
       title: "Replace completed",
-      description: `Replaced all occurrences of "${searchTerm}" with "${replaceText}"`,
+      description: `Replaced ${matchCount} ${matchCount === 1 ? 'occurrence' : 'occurrences'} of "${searchTerm}" with "${replaceText}"`,
     });
   };
 
@@ -430,10 +449,10 @@ export const TextEditor = () => {
     const [tempColor, setTempColor] = useState(value);
     
     const presetColors = [
-      '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
-      '#FFFF00', '#FF00FF', '#00FFFF', '#808080', '#800000',
-      '#808000', '#008000', '#800080', '#008080', '#000080',
-      '#FFA500', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00',
+      ['#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF'],
+      ['#FFB3B3', '#B3FFB3', '#B3B3FF', '#FFE6B3', '#E6B3FF'],
+      ['#FF8C00', '#FF4500', '#8B4513', '#A0522D', '#CD853F'],
+      ['#4682B4', '#5F9EA0', '#6495ED', '#87CEEB', '#B0C4DE']
     ];
 
     const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -455,7 +474,7 @@ export const TextEditor = () => {
             className="w-[150px] justify-start text-left font-normal"
           >
             <div
-              className="w-4 h-4 rounded-full mr-2 shrink-0"
+              className="w-4 h-4 rounded-full mr-2 shrink-0 border border-slate-200"
               style={{ backgroundColor: value }}
             />
             {title}
@@ -465,25 +484,38 @@ export const TextEditor = () => {
           <div className="space-y-4">
             <div className="flex flex-col space-y-2">
               <label className="text-sm font-medium">Custom Color</label>
-              <input
-                type="color"
-                value={tempColor}
-                onChange={handleColorChange}
-                className="w-full h-8 cursor-pointer"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={tempColor}
+                  onChange={handleColorChange}
+                  className="w-full h-8 cursor-pointer rounded-md"
+                />
+                <input
+                  type="text"
+                  value={tempColor.toUpperCase()}
+                  onChange={(e) => handlePresetClick(e.target.value)}
+                  className="w-24 px-2 text-sm border rounded-md"
+                  placeholder="#000000"
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Preset Colors</label>
-              <div className="grid grid-cols-5 gap-2">
-                {presetColors.map((color) => (
-                  <button
-                    key={color}
-                    className={`w-8 h-8 rounded-full border-2 ${
-                      tempColor === color ? 'border-primary' : 'border-transparent'
-                    }`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => handlePresetClick(color)}
-                  />
+              <label className="text-sm font-medium">Color Palettes</label>
+              <div className="space-y-2">
+                {presetColors.map((palette, index) => (
+                  <div key={index} className="flex gap-2">
+                    {palette.map((color) => (
+                      <button
+                        key={color}
+                        className={`w-10 h-10 rounded-lg border-2 transition-all hover:scale-110 ${
+                          tempColor === color ? 'border-primary shadow-lg' : 'border-transparent'
+                        }`}
+                        style={{ backgroundColor: color }}
+                        onClick={() => handlePresetClick(color)}
+                      />
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
@@ -587,7 +619,7 @@ export const TextEditor = () => {
             </select>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-4 pb-4 border-b">
             <ColorPicker
               value={textColor}
               onChange={(color: string) => handleTextColorChange(color)}
@@ -596,44 +628,50 @@ export const TextEditor = () => {
             <ColorPicker
               value={backgroundColor}
               onChange={(color: string) => handleBackgroundColorChange(color)}
-              title="Background Color"
+              title="Background"
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2">
-            <div className="flex-1 flex gap-2">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search..."
-                className="flex-1 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-              <Button
-                variant="outline"
-                size={isMobile ? "sm" : "default"}
-                onClick={handleSearch}
-                className="whitespace-nowrap"
-              >
-                Search
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-3 pb-4 border-b">
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-medium">Search</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Find text..."
+                  className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <Button
+                  variant="outline"
+                  size={isMobile ? "sm" : "default"}
+                  onClick={handleSearch}
+                  className="whitespace-nowrap hover:bg-slate-100"
+                >
+                  Search
+                </Button>
+              </div>
             </div>
-            <div className="flex-1 flex gap-2">
-              <input
-                type="text"
-                value={replaceText}
-                onChange={(e) => setReplaceText(e.target.value)}
-                placeholder="Replace..."
-                className="flex-1 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-              />
-              <Button
-                variant="outline"
-                size={isMobile ? "sm" : "default"}
-                onClick={handleReplace}
-                className="whitespace-nowrap"
-              >
-                Replace
-              </Button>
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-medium">Replace</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={replaceText}
+                  onChange={(e) => setReplaceText(e.target.value)}
+                  placeholder="Replace with..."
+                  className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <Button
+                  variant="outline"
+                  size={isMobile ? "sm" : "default"}
+                  onClick={handleReplace}
+                  className="whitespace-nowrap hover:bg-slate-100"
+                >
+                  Replace All
+                </Button>
+              </div>
             </div>
           </div>
         </div>
