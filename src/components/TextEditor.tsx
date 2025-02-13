@@ -141,21 +141,24 @@ export const TextEditor = () => {
     }
   };
 
-  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTextColor(e.target.value);
+  // Update the color change handlers to work with both string and event inputs
+  const handleTextColorChange = useCallback((colorValue: string | React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = typeof colorValue === 'string' ? colorValue : colorValue.target.value;
+    setTextColor(newColor);
     const textarea = document.querySelector('textarea');
     if (textarea) {
-      textarea.style.color = e.target.value;
+      textarea.style.color = newColor;
     }
-  };
+  }, []);
 
-  const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBackgroundColor(e.target.value);
+  const handleBackgroundColorChange = useCallback((colorValue: string | React.ChangeEvent<HTMLInputElement>) => {
+    const newColor = typeof colorValue === 'string' ? colorValue : colorValue.target.value;
+    setBackgroundColor(newColor);
     const textarea = document.querySelector('textarea');
     if (textarea) {
-      textarea.style.backgroundColor = e.target.value;
+      textarea.style.backgroundColor = newColor;
     }
-  };
+  }, []);
 
   const removeDuplicateWords = () => {
     const words = text.split(/\s+/);
@@ -420,6 +423,7 @@ export const TextEditor = () => {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [handleStyle, handleFileExport]);
 
+  // Enhanced ColorPicker component
   const ColorPicker = ({ value, onChange, title }: { value: string; onChange: (color: string) => void; title: string }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [tempColor, setTempColor] = useState(value);
@@ -430,6 +434,17 @@ export const TextEditor = () => {
       '#808000', '#008000', '#800080', '#008080', '#000080',
       '#FFA500', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00',
     ];
+
+    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newColor = e.target.value;
+      setTempColor(newColor);
+      onChange(newColor);
+    };
+
+    const handlePresetClick = (color: string) => {
+      setTempColor(color);
+      onChange(color);
+    };
 
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -452,10 +467,7 @@ export const TextEditor = () => {
               <input
                 type="color"
                 value={tempColor}
-                onChange={(e) => {
-                  setTempColor(e.target.value);
-                  onChange(e.target.value);
-                }}
+                onChange={handleColorChange}
                 className="w-full h-8 cursor-pointer"
               />
             </div>
@@ -469,10 +481,7 @@ export const TextEditor = () => {
                       tempColor === color ? 'border-primary' : 'border-transparent'
                     }`}
                     style={{ backgroundColor: color }}
-                    onClick={() => {
-                      setTempColor(color);
-                      onChange(color);
-                    }}
+                    onClick={() => handlePresetClick(color)}
                   />
                 ))}
               </div>
@@ -615,15 +624,16 @@ export const TextEditor = () => {
             ))}
           </select>
 
+          {/* Color Controls */}
           <div className="flex items-center gap-2">
             <ColorPicker
               value={textColor}
-              onChange={handleTextColorChange}
+              onChange={(color: string) => handleTextColorChange(color)}
               title="Text Color"
             />
             <ColorPicker
               value={backgroundColor}
-              onChange={handleBackgroundColorChange}
+              onChange={(color: string) => handleBackgroundColorChange(color)}
               title="Background Color"
             />
           </div>
