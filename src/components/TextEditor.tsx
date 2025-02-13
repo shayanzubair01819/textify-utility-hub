@@ -96,14 +96,15 @@ export const TextEditor = () => {
     }
   }, [text, toast]);
 
-  const handleAlignment = (alignment: string) => {
+  // Ensure text formatting functions work consistently
+  const handleAlignment = useCallback((alignment: string) => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
       textarea.style.textAlign = alignment;
     }
-  };
+  }, []);
 
-  const handleStyle = (style: string) => {
+  const handleStyle = useCallback((style: string) => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
       switch (style) {
@@ -118,7 +119,7 @@ export const TextEditor = () => {
           break;
       }
     }
-  };
+  }, []);
 
   const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFontFamily(e.target.value);
@@ -444,15 +445,16 @@ export const TextEditor = () => {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [handleStyle, handleFileExport]);
 
+  // Enhanced ColorPicker with contained layout
   const ColorPicker = ({ value, onChange, title }: { value: string; onChange: (color: string) => void; title: string }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [tempColor, setTempColor] = useState(value);
     
     const presetColors = [
-      ['#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF'],
-      ['#FFB3B3', '#B3FFB3', '#B3B3FF', '#FFE6B3', '#E6B3FF'],
-      ['#FF8C00', '#FF4500', '#8B4513', '#A0522D', '#CD853F'],
-      ['#4682B4', '#5F9EA0', '#6495ED', '#87CEEB', '#B0C4DE']
+      ['#000000', '#434343', '#666666', '#999999', '#B7B7B7'],
+      ['#FFFFFF', '#F3F3F3', '#E5E5E5', '#D4D4D4', '#C8C8C8'],
+      ['#FF0000', '#FF4D4D', '#FF9999', '#FFE5E5', '#FFF2F2'],
+      ['#0000FF', '#4D4DFF', '#9999FF', '#E5E5FF', '#F2F2FF']
     ];
 
     const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -471,45 +473,45 @@ export const TextEditor = () => {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-[150px] justify-start text-left font-normal"
+            className="w-[120px] h-9 justify-start text-left font-normal"
           >
             <div
               className="w-4 h-4 rounded-full mr-2 shrink-0 border border-slate-200"
               style={{ backgroundColor: value }}
             />
-            {title}
+            <span className="truncate">{title}</span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[280px]">
-          <div className="space-y-4">
-            <div className="flex flex-col space-y-2">
-              <label className="text-sm font-medium">Custom Color</label>
+        <PopoverContent className="w-[240px] p-3">
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium">Custom</label>
               <div className="flex gap-2">
                 <input
                   type="color"
                   value={tempColor}
                   onChange={handleColorChange}
-                  className="w-full h-8 cursor-pointer rounded-md"
+                  className="w-24 h-8 p-1 rounded cursor-pointer"
                 />
                 <input
                   type="text"
                   value={tempColor.toUpperCase()}
                   onChange={(e) => handlePresetClick(e.target.value)}
-                  className="w-24 px-2 text-sm border rounded-md"
+                  className="w-20 px-2 text-xs border rounded"
                   placeholder="#000000"
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Color Palettes</label>
-              <div className="space-y-2">
-                {presetColors.map((palette, index) => (
-                  <div key={index} className="flex gap-2">
-                    {palette.map((color) => (
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium">Presets</label>
+              <div className="grid gap-1">
+                {presetColors.map((row, idx) => (
+                  <div key={idx} className="flex gap-1">
+                    {row.map((color) => (
                       <button
                         key={color}
-                        className={`w-10 h-10 rounded-lg border-2 transition-all hover:scale-110 ${
-                          tempColor === color ? 'border-primary shadow-lg' : 'border-transparent'
+                        className={`w-8 h-8 rounded transition-transform hover:scale-105 ${
+                          tempColor === color ? 'ring-2 ring-primary ring-offset-2' : 'ring-1 ring-slate-200'
                         }`}
                         style={{ backgroundColor: color }}
                         onClick={() => handlePresetClick(color)}
@@ -526,286 +528,188 @@ export const TextEditor = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
-      <div className="text-center space-y-2 sm:space-y-3">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4">
+      <div className="text-center space-y-2">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
           Advanced Text Editor
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto px-4">
-          A powerful tool for formatting, converting, and manipulating text
+        <p className="text-sm text-slate-600">
+          A powerful tool for formatting and editing text
         </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-3 border-b">
-          <div className="flex flex-wrap gap-2">
-            <div className="flex items-center gap-1 p-1 bg-slate-50 rounded-lg">
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "default"}
-                onClick={() => handleAlignment('left')}
-                className="hover:bg-slate-100"
-              >
-                <AlignLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "default"}
-                onClick={() => handleAlignment('center')}
-                className="hover:bg-slate-100"
-              >
-                <AlignCenter className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "default"}
-                onClick={() => handleAlignment('right')}
-                className="hover:bg-slate-100"
-              >
-                <AlignRight className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-1 p-1 bg-slate-50 rounded-lg">
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "default"}
-                onClick={() => handleStyle('bold')}
-                className="hover:bg-slate-100"
-              >
-                <Bold className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "default"}
-                onClick={() => handleStyle('italic')}
-                className="hover:bg-slate-100"
-              >
-                <Italic className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size={isMobile ? "sm" : "default"}
-                onClick={() => handleStyle('underline')}
-                className="hover:bg-slate-100"
-              >
-                <Underline className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <select
-              value={fontFamily}
-              onChange={handleFontChange}
-              className="px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-slate-50"
-            >
-              {fontFamilies.map(font => (
-                <option key={font.value} value={font.value}>
-                  {font.label}
-                </option>
-              ))}
-            </select>
-            <select
-              value={fontSize}
-              onChange={handleFontSizeChange}
-              className="px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-slate-50"
-            >
-              {fontSizes.map(size => (
-                <option key={size.value} value={size.value}>
-                  {size.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-wrap gap-4 pb-4 border-b">
-            <ColorPicker
-              value={textColor}
-              onChange={(color: string) => handleTextColorChange(color)}
-              title="Text Color"
-            />
-            <ColorPicker
-              value={backgroundColor}
-              onChange={(color: string) => handleBackgroundColorChange(color)}
-              title="Background"
-            />
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 pb-4 border-b">
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-medium">Search</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Find text..."
-                  className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                <Button
-                  variant="outline"
-                  size={isMobile ? "sm" : "default"}
-                  onClick={handleSearch}
-                  className="whitespace-nowrap hover:bg-slate-100"
-                >
-                  Search
-                </Button>
-              </div>
-            </div>
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-medium">Replace</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={replaceText}
-                  onChange={(e) => setReplaceText(e.target.value)}
-                  placeholder="Replace with..."
-                  className="flex-1 px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                <Button
-                  variant="outline"
-                  size={isMobile ? "sm" : "default"}
-                  onClick={handleReplace}
-                  className="whitespace-nowrap hover:bg-slate-100"
-                >
-                  Replace All
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pb-3 border-b">
-          <Button
-            variant="outline"
-            size={isMobile ? "sm" : "default"}
-            onClick={convertToHTML}
-            className="w-full"
-          >
-            HTML
-          </Button>
-          <Button
-            variant="outline"
-            size={isMobile ? "sm" : "default"}
-            onClick={() => {
-              if (isMarkdownPreview) {
-                setIsMarkdownPreview(false);
-              } else {
-                convertToMarkdown();
-              }
-            }}
-            className="w-full"
-          >
-            {isMarkdownPreview ? 'Edit' : 'Preview'}
-          </Button>
-          <Button
-            variant="outline"
-            size={isMobile ? "sm" : "default"}
-            onClick={encodeBase64}
-            className="w-full"
-          >
-            Encode
-          </Button>
-          <Button
-            variant="outline"
-            size={isMobile ? "sm" : "default"}
-            onClick={decodeBase64}
-            className="w-full"
-          >
-            Decode
-          </Button>
-        </div>
-
+      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 space-y-3">
+        {/* Text Formatting Tools */}
         <div className="flex flex-wrap gap-2 pb-3 border-b">
-          <Button
-            variant="outline"
-            size={isMobile ? "sm" : "default"}
-            onClick={() => document.getElementById('fileInput')?.click()}
-            className="flex-1 sm:flex-none"
+          <div className="inline-flex items-center rounded-lg bg-slate-50 p-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleAlignment('left')}
+              className="h-8 w-8"
+            >
+              <AlignLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleAlignment('center')}
+              className="h-8 w-8"
+            >
+              <AlignCenter className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleAlignment('right')}
+              className="h-8 w-8"
+            >
+              <AlignRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="inline-flex items-center rounded-lg bg-slate-50 p-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleStyle('bold')}
+              className="h-8 w-8"
+            >
+              <Bold className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleStyle('italic')}
+              className="h-8 w-8"
+            >
+              <Italic className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleStyle('underline')}
+              className="h-8 w-8"
+            >
+              <Underline className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <select
+            value={fontFamily}
+            onChange={handleFontChange}
+            className="h-8 px-2 text-sm border rounded bg-slate-50"
           >
-            <Upload className="h-4 w-4 mr-2" />
-            Import
-          </Button>
-          <input
-            id="fileInput"
-            type="file"
-            onChange={handleFileImport}
-            className="hidden"
-            accept=".txt,.md"
-          />
-          <Button
-            variant="outline"
-            size={isMobile ? "sm" : "default"}
-            onClick={handleFileExport}
-            className="flex-1 sm:flex-none"
+            {fontFamilies.map(font => (
+              <option key={font.value} value={font.value}>
+                {font.label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={fontSize}
+            onChange={handleFontSizeChange}
+            className="h-8 px-2 text-sm border rounded bg-slate-50"
           >
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
+            {fontSizes.map(size => (
+              <option key={size.value} value={size.value}>
+                {size.label}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {isMarkdownPreview ? (
-          <div 
-            className="w-full min-h-[16rem] sm:min-h-[24rem] p-3 sm:p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: markdownHTML }}
+        {/* Color Controls */}
+        <div className="flex flex-wrap gap-2 pb-3 border-b">
+          <ColorPicker
+            value={textColor}
+            onChange={(color: string) => handleTextColorChange(color)}
+            title="Text"
           />
-        ) : showHTML ? (
-          <div className="w-full min-h-[16rem] sm:min-h-[24rem] p-3 sm:p-4 border rounded-lg bg-slate-50 overflow-auto">
-            <div
-              className="whitespace-pre-wrap font-mono text-sm"
-              dangerouslySetInnerHTML={{ __html: convertedHTML }}
-            />
-          </div>
-        ) : (
-          <textarea
-            value={text}
-            onChange={handleTextChange}
-            className="w-full min-h-[16rem] sm:min-h-[24rem] p-3 sm:p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans"
-            placeholder={isMobile ? "Enter text here..." : "Enter or paste your text here... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"}
-            style={{
-              fontFamily,
-              fontSize,
-              lineHeight,
-              color: textColor,
-              backgroundColor,
-            }}
+          <ColorPicker
+            value={backgroundColor}
+            onChange={(color: string) => handleBackgroundColorChange(color)}
+            title="Background"
           />
-        )}
+        </div>
 
+        {/* Search and Replace */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-3 border-b">
+          <div className="space-y-1">
+            <label className="text-xs font-medium">Search</label>
+            <div className="flex gap-1">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Find text..."
+                className="flex-1 h-8 px-2 text-sm border rounded"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSearch}
+                className="whitespace-nowrap h-8"
+              >
+                Search
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium">Replace</label>
+            <div className="flex gap-1">
+              <input
+                type="text"
+                value={replaceText}
+                onChange={(e) => setReplaceText(e.target.value)}
+                placeholder="Replace with..."
+                className="flex-1 h-8 px-2 text-sm border rounded"
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleReplace}
+                className="whitespace-nowrap h-8"
+              >
+                Replace
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Text Area */}
+        <textarea
+          value={text}
+          onChange={handleTextChange}
+          className="w-full min-h-[200px] p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-y"
+          placeholder="Enter or paste your text here..."
+          style={{
+            fontFamily,
+            fontSize,
+            lineHeight,
+            color: textColor,
+            backgroundColor,
+          }}
+        />
+
+        {/* Status Bar */}
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-3">
             <span>{wordCount} words</span>
             <span>{charCount} chars</span>
-            {fileName && (
-              <span className="flex items-center gap-1">
-                <FileText className="h-4 w-4" />
-                {fileName}
-              </span>
-            )}
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className="hover:bg-slate-100"
+            className="h-8"
           >
             <Copy className="h-4 w-4 mr-2" />
             Copy
           </Button>
         </div>
       </div>
-
-      {!isMobile && (
-        <div className="text-center">
-          <div className="inline-block px-3 py-2 bg-slate-100 rounded-lg text-xs sm:text-sm text-slate-600">
-            <span className="font-medium">Shortcuts:</span>{' '}
-            <kbd className="px-1.5 py-0.5 bg-white rounded border shadow-sm mx-1">Ctrl/⌘ + B</kbd> Bold,{' '}
-            <kbd className="px-1.5 py-0.5 bg-white rounded border shadow-sm mx-1">Ctrl/⌘ + I</kbd> Italic,{' '}
-            <kbd className="px-1.5 py-0.5 bg-white rounded border shadow-sm mx-1">Ctrl/⌘ + S</kbd> Save
-          </div>
-        </div>
-      )}
     </div>
   );
 };
