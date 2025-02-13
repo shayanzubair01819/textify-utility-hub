@@ -25,6 +25,10 @@ export const TextEditor = () => {
   const [lineHeight, setLineHeight] = useState('1.5');
   const [textColor, setTextColor] = useState('#000000');
   const [backgroundColor, setBackgroundColor] = useState('transparent');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [replaceText, setReplaceText] = useState('');
+  const [convertedHTML, setConvertedHTML] = useState('');
+  const [showHTML, setShowHTML] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -182,6 +186,56 @@ export const TextEditor = () => {
     toast({
       title: "Lorem Ipsum generated",
       description: "Random text has been generated.",
+    });
+  };
+
+  const handleSearch = () => {
+    if (!searchTerm) return;
+    const regex = new RegExp(searchTerm, 'gi');
+    const newText = text.replace(regex, match => `<mark>${match}</mark>`);
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      textarea.innerHTML = newText;
+    }
+    toast({
+      title: "Search completed",
+      description: `Highlighted all occurrences of "${searchTerm}"`,
+    });
+  };
+
+  const handleReplace = () => {
+    if (!searchTerm) return;
+    const regex = new RegExp(searchTerm, 'gi');
+    const newText = text.replace(regex, replaceText);
+    setText(newText);
+    toast({
+      title: "Replace completed",
+      description: `Replaced all occurrences of "${searchTerm}" with "${replaceText}"`,
+    });
+  };
+
+  const convertToHTML = () => {
+    const htmlText = text
+      .split('\n')
+      .map(paragraph => `<p>${paragraph}</p>`)
+      .join('\n');
+    setConvertedHTML(htmlText);
+    setShowHTML(true);
+    toast({
+      title: "Converted to HTML",
+      description: "Text has been converted to HTML format",
+    });
+  };
+
+  const convertFromHTML = () => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = text;
+    const plainText = tempDiv.textContent || tempDiv.innerText;
+    setText(plainText);
+    setShowHTML(false);
+    toast({
+      title: "Converted from HTML",
+      description: "HTML has been converted to plain text",
     });
   };
 
@@ -400,19 +454,77 @@ export const TextEditor = () => {
           </Button>
         </div>
 
-        <textarea
-          value={text}
-          onChange={handleTextChange}
-          className="w-full h-64 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none font-sans"
-          placeholder="Enter or paste your text here..."
-          style={{
-            fontFamily,
-            fontSize,
-            lineHeight,
-            color: textColor,
-            backgroundColor,
-          }}
-        />
+        <div className="flex flex-wrap gap-4 pb-4 border-b">
+          <div className="flex-1 flex gap-2">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search text..."
+              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+            <Button
+              variant="outline"
+              onClick={handleSearch}
+              className="hover:bg-slate-100"
+            >
+              Search
+            </Button>
+          </div>
+          <div className="flex-1 flex gap-2">
+            <input
+              type="text"
+              value={replaceText}
+              onChange={(e) => setReplaceText(e.target.value)}
+              placeholder="Replace with..."
+              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+            <Button
+              variant="outline"
+              onClick={handleReplace}
+              className="hover:bg-slate-100"
+            >
+              Replace All
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex gap-2 pb-4 border-b">
+          <Button
+            variant="outline"
+            onClick={convertToHTML}
+            className="hover:bg-slate-100"
+          >
+            Convert to HTML
+          </Button>
+          <Button
+            variant="outline"
+            onClick={convertFromHTML}
+            className="hover:bg-slate-100"
+          >
+            HTML to Text
+          </Button>
+        </div>
+
+        {showHTML ? (
+          <div className="w-full h-64 p-4 border rounded-lg bg-slate-50 overflow-auto">
+            <pre className="text-sm font-mono">{convertedHTML}</pre>
+          </div>
+        ) : (
+          <textarea
+            value={text}
+            onChange={handleTextChange}
+            className="w-full h-64 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none font-sans"
+            placeholder="Enter or paste your text here..."
+            style={{
+              fontFamily,
+              fontSize,
+              lineHeight,
+              color: textColor,
+              backgroundColor,
+            }}
+          />
+        )}
 
         <div className="flex items-center justify-between text-sm text-slate-600">
           <div className="flex gap-4">
