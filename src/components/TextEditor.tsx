@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +20,11 @@ export const TextEditor = () => {
   const [text, setText] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
+  const [fontFamily, setFontFamily] = useState('Inter');
+  const [fontSize, setFontSize] = useState('16px');
+  const [lineHeight, setLineHeight] = useState('1.5');
+  const [textColor, setTextColor] = useState('#000000');
+  const [backgroundColor, setBackgroundColor] = useState('transparent');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -97,7 +101,46 @@ export const TextEditor = () => {
     }
   };
 
-  // New utility functions
+  const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFontFamily(e.target.value);
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      textarea.style.fontFamily = e.target.value;
+    }
+  };
+
+  const handleFontSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFontSize(e.target.value);
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      textarea.style.fontSize = e.target.value;
+    }
+  };
+
+  const handleLineHeightChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLineHeight(e.target.value);
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      textarea.style.lineHeight = e.target.value;
+    }
+  };
+
+  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextColor(e.target.value);
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      textarea.style.color = e.target.value;
+    }
+  };
+
+  const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBackgroundColor(e.target.value);
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      textarea.style.backgroundColor = e.target.value;
+    }
+  };
+
   const removeDuplicateWords = () => {
     const words = text.split(/\s+/);
     const uniqueWords = [...new Set(words)];
@@ -141,6 +184,28 @@ export const TextEditor = () => {
       description: "Random text has been generated.",
     });
   };
+
+  const fontFamilies = [
+    { label: 'Inter', value: 'Inter' },
+    { label: 'Arial', value: 'Arial' },
+    { label: 'Times New Roman', value: 'Times New Roman' },
+    { label: 'Courier New', value: 'Courier New' },
+    { label: 'Georgia', value: 'Georgia' },
+  ];
+
+  const fontSizes = [
+    { label: 'Small', value: '14px' },
+    { label: 'Normal', value: '16px' },
+    { label: 'Large', value: '18px' },
+    { label: 'Extra Large', value: '20px' },
+  ];
+
+  const lineHeights = [
+    { label: 'Tight', value: '1.2' },
+    { label: 'Normal', value: '1.5' },
+    { label: 'Relaxed', value: '1.8' },
+    { label: 'Double', value: '2' },
+  ];
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-fadeIn">
@@ -237,7 +302,61 @@ export const TextEditor = () => {
           </div>
         </div>
 
-        {/* New utilities toolbar */}
+        <div className="flex flex-wrap gap-4 pb-4 border-b">
+          <select
+            value={fontFamily}
+            onChange={handleFontChange}
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            {fontFamilies.map(font => (
+              <option key={font.value} value={font.value}>
+                {font.label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={fontSize}
+            onChange={handleFontSizeChange}
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            {fontSizes.map(size => (
+              <option key={size.value} value={size.value}>
+                {size.label}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={lineHeight}
+            onChange={handleLineHeightChange}
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            {lineHeights.map(height => (
+              <option key={height.value} value={height.value}>
+                {height.label}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={textColor}
+              onChange={handleTextColorChange}
+              className="w-8 h-8 rounded cursor-pointer"
+              title="Text Color"
+            />
+            <input
+              type="color"
+              value={backgroundColor}
+              onChange={handleBackgroundColorChange}
+              className="w-8 h-8 rounded cursor-pointer"
+              title="Highlight Color"
+            />
+          </div>
+        </div>
+
         <div className="flex flex-wrap gap-2 pb-4 border-b">
           <Button
             variant="outline"
@@ -286,6 +405,13 @@ export const TextEditor = () => {
           onChange={handleTextChange}
           className="w-full h-64 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none font-sans"
           placeholder="Enter or paste your text here..."
+          style={{
+            fontFamily,
+            fontSize,
+            lineHeight,
+            color: textColor,
+            backgroundColor,
+          }}
         />
 
         <div className="flex items-center justify-between text-sm text-slate-600">
