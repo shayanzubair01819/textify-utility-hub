@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
   AlignLeft,
   AlignCenter,
@@ -19,9 +18,7 @@ import {
   Upload,
   Code,
   FileCode,
-  Menu,
 } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export const TextEditor = () => {
   const [text, setText] = useState('');
@@ -40,7 +37,6 @@ export const TextEditor = () => {
   const [isMarkdownPreview, setIsMarkdownPreview] = useState(false);
   const [markdownHTML, setMarkdownHTML] = useState('');
   const { toast } = useToast();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -96,15 +92,14 @@ export const TextEditor = () => {
     }
   }, [text, toast]);
 
-  // Ensure text formatting functions work consistently
-  const handleAlignment = useCallback((alignment: string) => {
+  const handleAlignment = (alignment: string) => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
       textarea.style.textAlign = alignment;
     }
-  }, []);
+  };
 
-  const handleStyle = useCallback((style: string) => {
+  const handleStyle = (style: string) => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
       switch (style) {
@@ -119,7 +114,7 @@ export const TextEditor = () => {
           break;
       }
     }
-  }, []);
+  };
 
   const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFontFamily(e.target.value);
@@ -145,23 +140,21 @@ export const TextEditor = () => {
     }
   };
 
-  const handleTextColorChange = useCallback((colorValue: string | React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = typeof colorValue === 'string' ? colorValue : colorValue.target.value;
-    setTextColor(newColor);
+  const handleTextColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTextColor(e.target.value);
     const textarea = document.querySelector('textarea');
     if (textarea) {
-      textarea.style.color = newColor;
+      textarea.style.color = e.target.value;
     }
-  }, []);
+  };
 
-  const handleBackgroundColorChange = useCallback((colorValue: string | React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = typeof colorValue === 'string' ? colorValue : colorValue.target.value;
-    setBackgroundColor(newColor);
+  const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBackgroundColor(e.target.value);
     const textarea = document.querySelector('textarea');
     if (textarea) {
-      textarea.style.backgroundColor = newColor;
+      textarea.style.backgroundColor = e.target.value;
     }
-  }, []);
+  };
 
   const removeDuplicateWords = () => {
     const words = text.split(/\s+/);
@@ -209,67 +202,26 @@ export const TextEditor = () => {
 
   const handleSearch = () => {
     if (!searchTerm) return;
-
+    const regex = new RegExp(searchTerm, 'gi');
+    const newText = text.replace(regex, match => `<mark>${match}</mark>`);
     const textarea = document.querySelector('textarea');
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-
-    const currentText = text;
-    if (searchTerm) {
-      const regex = new RegExp(searchTerm, 'gi');
-      const matches = Array.from(currentText.matchAll(regex));
-      
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = currentText;
-      
-      matches.forEach(match => {
-        const matchIndex = match.index || 0;
-        const matchText = match[0];
-        const span = `<mark style="background-color: #fff3cd; padding: 0 2px; border-radius: 2px;">${matchText}</mark>`;
-        tempDiv.innerHTML = tempDiv.innerHTML.slice(0, matchIndex) + span + tempDiv.innerHTML.slice(matchIndex + matchText.length);
-      });
-
-      setConvertedHTML(tempDiv.innerHTML);
-      setShowHTML(true);
-      
-      toast({
-        title: "Search results",
-        description: `Found ${matches.length} matches for "${searchTerm}"`,
-      });
+    if (textarea) {
+      textarea.innerHTML = newText;
     }
-
-    textarea.setSelectionRange(start, end);
+    toast({
+      title: "Search completed",
+      description: `Highlighted all occurrences of "${searchTerm}"`,
+    });
   };
 
   const handleReplace = () => {
-    if (!searchTerm) {
-      toast({
-        title: "Search term required",
-        description: "Please enter a search term before replacing.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+    if (!searchTerm) return;
     const regex = new RegExp(searchTerm, 'gi');
-    const matchCount = (text.match(regex) || []).length;
-    
-    if (matchCount === 0) {
-      toast({
-        title: "No matches found",
-        description: `No occurrences of "${searchTerm}" were found in the text.`,
-        variant: "destructive",
-      });
-      return;
-    }
-
     const newText = text.replace(regex, replaceText);
     setText(newText);
     toast({
       title: "Replace completed",
-      description: `Replaced ${matchCount} ${matchCount === 1 ? 'occurrence' : 'occurrences'} of "${searchTerm}" with "${replaceText}"`,
+      description: `Replaced all occurrences of "${searchTerm}" with "${replaceText}"`,
     });
   };
 
@@ -445,160 +397,106 @@ export const TextEditor = () => {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [handleStyle, handleFileExport]);
 
-  // Enhanced ColorPicker with contained layout
-  const ColorPicker = ({ value, onChange, title }: { value: string; onChange: (color: string) => void; title: string }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [tempColor, setTempColor] = useState(value);
-    
-    const presetColors = [
-      ['#000000', '#434343', '#666666', '#999999', '#B7B7B7'],
-      ['#FFFFFF', '#F3F3F3', '#E5E5E5', '#D4D4D4', '#C8C8C8'],
-      ['#FF0000', '#FF4D4D', '#FF9999', '#FFE5E5', '#FFF2F2'],
-      ['#0000FF', '#4D4DFF', '#9999FF', '#E5E5FF', '#F2F2FF']
-    ];
-
-    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newColor = e.target.value;
-      setTempColor(newColor);
-      onChange(newColor);
-    };
-
-    const handlePresetClick = (color: string) => {
-      setTempColor(color);
-      onChange(color);
-    };
-
-    return (
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-[120px] h-9 justify-start text-left font-normal"
-          >
-            <div
-              className="w-4 h-4 rounded-full mr-2 shrink-0 border border-slate-200"
-              style={{ backgroundColor: value }}
-            />
-            <span className="truncate">{title}</span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[240px] p-3">
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium">Custom</label>
-              <div className="flex gap-2">
-                <input
-                  type="color"
-                  value={tempColor}
-                  onChange={handleColorChange}
-                  className="w-24 h-8 p-1 rounded cursor-pointer"
-                />
-                <input
-                  type="text"
-                  value={tempColor.toUpperCase()}
-                  onChange={(e) => handlePresetClick(e.target.value)}
-                  className="w-20 px-2 text-xs border rounded"
-                  placeholder="#000000"
-                />
-              </div>
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium">Presets</label>
-              <div className="grid gap-1">
-                {presetColors.map((row, idx) => (
-                  <div key={idx} className="flex gap-1">
-                    {row.map((color) => (
-                      <button
-                        key={color}
-                        className={`w-8 h-8 rounded transition-transform hover:scale-105 ${
-                          tempColor === color ? 'ring-2 ring-primary ring-offset-2' : 'ring-1 ring-slate-200'
-                        }`}
-                        style={{ backgroundColor: color }}
-                        onClick={() => handlePresetClick(color)}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
-    );
-  };
-
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          Advanced Text Editor
-        </h1>
-        <p className="text-sm text-slate-600">
-          A powerful tool for formatting and editing text
-        </p>
+    <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-fadeIn">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-primary mb-2">Text Formatter</h1>
+        <p className="text-slate-600">A beautiful tool for all your text formatting needs</p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 space-y-3">
-        {/* Text Formatting Tools */}
-        <div className="flex flex-wrap gap-2 pb-3 border-b">
-          <div className="inline-flex items-center rounded-lg bg-slate-50 p-1">
+      <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
+        <div className="flex flex-wrap gap-2 pb-4 border-b">
+          <div className="flex gap-2">
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="icon"
               onClick={() => handleAlignment('left')}
-              className="h-8 w-8"
+              className="hover:bg-slate-100"
             >
               <AlignLeft className="h-4 w-4" />
             </Button>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="icon"
               onClick={() => handleAlignment('center')}
-              className="h-8 w-8"
+              className="hover:bg-slate-100"
             >
               <AlignCenter className="h-4 w-4" />
             </Button>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="icon"
               onClick={() => handleAlignment('right')}
-              className="h-8 w-8"
+              className="hover:bg-slate-100"
             >
               <AlignRight className="h-4 w-4" />
             </Button>
           </div>
 
-          <div className="inline-flex items-center rounded-lg bg-slate-50 p-1">
+          <div className="flex gap-2">
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="icon"
               onClick={() => handleStyle('bold')}
-              className="h-8 w-8"
+              className="hover:bg-slate-100"
             >
               <Bold className="h-4 w-4" />
             </Button>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="icon"
               onClick={() => handleStyle('italic')}
-              className="h-8 w-8"
+              className="hover:bg-slate-100"
             >
               <Italic className="h-4 w-4" />
             </Button>
             <Button
-              variant="ghost"
-              size="sm"
+              variant="outline"
+              size="icon"
               onClick={() => handleStyle('underline')}
-              className="h-8 w-8"
+              className="hover:bg-slate-100"
             >
               <Underline className="h-4 w-4" />
             </Button>
           </div>
 
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => handleCaseChange('upper')}
+              className="hover:bg-slate-100"
+            >
+              ABC
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleCaseChange('lower')}
+              className="hover:bg-slate-100"
+            >
+              abc
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleCaseChange('title')}
+              className="hover:bg-slate-100"
+            >
+              Title
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleCaseChange('sentence')}
+              className="hover:bg-slate-100"
+            >
+              Sentence
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-4 pb-4 border-b">
           <select
             value={fontFamily}
             onChange={handleFontChange}
-            className="h-8 px-2 text-sm border rounded bg-slate-50"
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             {fontFamilies.map(font => (
               <option key={font.value} value={font.value}>
@@ -610,7 +508,7 @@ export const TextEditor = () => {
           <select
             value={fontSize}
             onChange={handleFontSizeChange}
-            className="h-8 px-2 text-sm border rounded bg-slate-50"
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             {fontSizes.map(size => (
               <option key={size.value} value={size.value}>
@@ -618,97 +516,239 @@ export const TextEditor = () => {
               </option>
             ))}
           </select>
-        </div>
 
-        {/* Color Controls */}
-        <div className="flex flex-wrap gap-2 pb-3 border-b">
-          <ColorPicker
-            value={textColor}
-            onChange={(color: string) => handleTextColorChange(color)}
-            title="Text"
-          />
-          <ColorPicker
-            value={backgroundColor}
-            onChange={(color: string) => handleBackgroundColorChange(color)}
-            title="Background"
-          />
-        </div>
+          <select
+            value={lineHeight}
+            onChange={handleLineHeightChange}
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            {lineHeights.map(height => (
+              <option key={height.value} value={height.value}>
+                {height.label}
+              </option>
+            ))}
+          </select>
 
-        {/* Search and Replace */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pb-3 border-b">
-          <div className="space-y-1">
-            <label className="text-xs font-medium">Search</label>
-            <div className="flex gap-1">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Find text..."
-                className="flex-1 h-8 px-2 text-sm border rounded"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSearch}
-                className="whitespace-nowrap h-8"
-              >
-                Search
-              </Button>
-            </div>
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-medium">Replace</label>
-            <div className="flex gap-1">
-              <input
-                type="text"
-                value={replaceText}
-                onChange={(e) => setReplaceText(e.target.value)}
-                placeholder="Replace with..."
-                className="flex-1 h-8 px-2 text-sm border rounded"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleReplace}
-                className="whitespace-nowrap h-8"
-              >
-                Replace
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={textColor}
+              onChange={handleTextColorChange}
+              className="w-8 h-8 rounded cursor-pointer"
+              title="Text Color"
+            />
+            <input
+              type="color"
+              value={backgroundColor}
+              onChange={handleBackgroundColorChange}
+              className="w-8 h-8 rounded cursor-pointer"
+              title="Highlight Color"
+            />
           </div>
         </div>
 
-        {/* Text Area */}
-        <textarea
-          value={text}
-          onChange={handleTextChange}
-          className="w-full min-h-[200px] p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-y"
-          placeholder="Enter or paste your text here..."
-          style={{
-            fontFamily,
-            fontSize,
-            lineHeight,
-            color: textColor,
-            backgroundColor,
-          }}
-        />
+        <div className="flex flex-wrap gap-2 pb-4 border-b">
+          <Button
+            variant="outline"
+            onClick={removeDuplicateWords}
+            className="hover:bg-slate-100"
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Remove Duplicates
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => sortWords(true)}
+            className="hover:bg-slate-100"
+          >
+            <SortAsc className="h-4 w-4 mr-2" />
+            Sort A-Z
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => sortWords(false)}
+            className="hover:bg-slate-100"
+          >
+            <SortDesc className="h-4 w-4 mr-2" />
+            Sort Z-A
+          </Button>
+          <Button
+            variant="outline"
+            onClick={shuffleWords}
+            className="hover:bg-slate-100"
+          >
+            <Shuffle className="h-4 w-4 mr-2" />
+            Shuffle
+          </Button>
+          <Button
+            variant="outline"
+            onClick={generateLoremIpsum}
+            className="hover:bg-slate-100"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Lorem Ipsum
+          </Button>
+        </div>
 
-        {/* Status Bar */}
+        <div className="flex flex-wrap gap-4 pb-4 border-b">
+          <div className="flex-1 flex gap-2">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search text..."
+              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+            <Button
+              variant="outline"
+              onClick={handleSearch}
+              className="hover:bg-slate-100"
+            >
+              Search
+            </Button>
+          </div>
+          <div className="flex-1 flex gap-2">
+            <input
+              type="text"
+              value={replaceText}
+              onChange={(e) => setReplaceText(e.target.value)}
+              placeholder="Replace with..."
+              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+            <Button
+              variant="outline"
+              onClick={handleReplace}
+              className="hover:bg-slate-100"
+            >
+              Replace All
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex gap-2 pb-4 border-b">
+          <Button
+            variant="outline"
+            onClick={convertToHTML}
+            className="hover:bg-slate-100"
+          >
+            Convert to HTML
+          </Button>
+          <Button
+            variant="outline"
+            onClick={convertFromHTML}
+            className="hover:bg-slate-100"
+          >
+            HTML to Text
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 pb-4 border-b">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={() => document.getElementById('fileInput')?.click()}
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Import
+            </Button>
+            <input
+              id="fileInput"
+              type="file"
+              onChange={handleFileImport}
+              className="hidden"
+              accept=".txt,.md"
+            />
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={handleFileExport}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={encodeBase64}
+            >
+              <Code className="h-4 w-4 mr-2" />
+              Encode Base64
+            </Button>
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={decodeBase64}
+            >
+              <Code className="h-4 w-4 mr-2" />
+              Decode Base64
+            </Button>
+          </div>
+
+          <Button
+            variant="outline"
+            className="hover:bg-slate-100"
+            onClick={() => {
+              if (isMarkdownPreview) {
+                setIsMarkdownPreview(false);
+              } else {
+                convertToMarkdown();
+              }
+            }}
+          >
+            <FileCode className="h-4 w-4 mr-2" />
+            {isMarkdownPreview ? 'Edit Mode' : 'Preview Markdown'}
+          </Button>
+        </div>
+
+        {isMarkdownPreview ? (
+          <div 
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: markdownHTML }}
+          />
+        ) : showHTML ? (
+          <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
+            <pre className="text-sm font-mono whitespace-pre-wrap">{convertedHTML}</pre>
+          </div>
+        ) : (
+          <textarea
+            value={text}
+            onChange={handleTextChange}
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans"
+            placeholder="Enter or paste your text here... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"
+            style={{
+              fontFamily,
+              fontSize,
+              lineHeight,
+              color: textColor,
+              backgroundColor,
+            }}
+          />
+        )}
+
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <div className="flex items-center gap-3">
+          <div className="flex gap-4">
             <span>{wordCount} words</span>
-            <span>{charCount} chars</span>
+            <span>{charCount} characters</span>
+            {fileName && <span>File: {fileName}</span>}
           </div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={handleCopy}
-            className="h-8"
+            className="hover:bg-slate-100"
           >
             <Copy className="h-4 w-4 mr-2" />
             Copy
           </Button>
         </div>
+      </div>
+
+      <div className="text-center text-sm text-slate-500 mt-4">
+        <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + S (Save)</p>
       </div>
     </div>
   );
