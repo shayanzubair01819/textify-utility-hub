@@ -289,14 +289,46 @@ export const TextEditor = () => {
   };
 
   const handleReplace = () => {
-    if (!searchTerm) return;
-    const regex = new RegExp(searchTerm, 'gi');
-    const newText = text.replace(regex, replaceText);
-    setText(newText);
-    toast({
-      title: "Replace completed",
-      description: `Replaced all occurrences of "${searchTerm}" with "${replaceText}"`,
-    });
+    if (!searchTerm) {
+      toast({
+        title: "Search term required",
+        description: "Please enter a text to search before replacing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const regex = new RegExp(searchTerm, 'gi');
+      const matches = text.match(regex);
+      const count = matches ? matches.length : 0;
+
+      if (count === 0) {
+        toast({
+          title: "No matches found",
+          description: `No occurrences of "${searchTerm}" were found to replace.`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const newText = text.replace(regex, replaceText);
+      setText(newText);
+
+      // Clear any existing highlights after replacement
+      clearHighlights();
+
+      toast({
+        title: "Replace completed",
+        description: `Replaced ${count} ${count === 1 ? 'occurrence' : 'occurrences'} of "${searchTerm}" with "${replaceText}"`,
+      });
+    } catch (e) {
+      toast({
+        title: "Replace failed",
+        description: "Invalid search pattern. Please try a different search term.",
+        variant: "destructive",
+      });
+    }
   };
 
   const convertToHTML = () => {
