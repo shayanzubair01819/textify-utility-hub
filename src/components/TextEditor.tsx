@@ -14,6 +14,10 @@ import {
   SortDesc,
   Shuffle,
   FileText,
+  Download,
+  Upload,
+  Code,
+  FileCode,
 } from 'lucide-react';
 
 export const TextEditor = () => {
@@ -29,6 +33,9 @@ export const TextEditor = () => {
   const [replaceText, setReplaceText] = useState('');
   const [convertedHTML, setConvertedHTML] = useState('');
   const [showHTML, setShowHTML] = useState(false);
+  const [fileName, setFileName] = useState('');
+  const [isMarkdownPreview, setIsMarkdownPreview] = useState(false);
+  const [markdownHTML, setMarkdownHTML] = useState('');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -236,6 +243,96 @@ export const TextEditor = () => {
     toast({
       title: "Converted from HTML",
       description: "HTML has been converted to plain text",
+    });
+  };
+
+  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setText(content);
+      toast({
+        title: "File imported",
+        description: `Successfully imported ${file.name}`,
+      });
+    };
+    reader.readAsText(file);
+  };
+
+  const handleFileExport = () => {
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName || 'text-export.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast({
+      title: "File exported",
+      description: "Text has been exported successfully.",
+    });
+  };
+
+  const encodeBase64 = () => {
+    try {
+      const encoded = btoa(text);
+      setText(encoded);
+      toast({
+        title: "Text encoded",
+        description: "Text has been encoded to Base64.",
+      });
+    } catch (err) {
+      toast({
+        title: "Encoding failed",
+        description: "Please ensure your text contains valid characters.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const decodeBase64 = () => {
+    try {
+      const decoded = atob(text);
+      setText(decoded);
+      toast({
+        title: "Text decoded",
+        description: "Base64 has been decoded to text.",
+      });
+    } catch (err) {
+      toast({
+        title: "Decoding failed",
+        description: "Please ensure your input is valid Base64.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const convertToMarkdown = () => {
+    const html = text
+      .replace(/#{6}\s?([^\n]+)/g, '<h6>$1</h6>')
+      .replace(/#{5}\s?([^\n]+)/g, '<h5>$1</h5>')
+      .replace(/#{4}\s?([^\n]+)/g, '<h4>$1</h4>')
+      .replace(/#{3}\s?([^\n]+)/g, '<h3>$1</h3>')
+      .replace(/#{2}\s?([^\n]+)/g, '<h2>$1</h2>')
+      .replace(/#{1}\s?([^\n]+)/g, '<h1>$1</h1>')
+      .replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*([^\*]+)\*/g, '<em>$1</em>')
+      .replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+    
+    setMarkdownHTML(`<div class="markdown-preview"><p>${html}</p></div>`);
+    setIsMarkdownPreview(true);
+    toast({
+      title: "Markdown preview",
+      description: "Viewing markdown preview. Click again to return to edit mode.",
     });
   };
 
@@ -506,7 +603,74 @@ export const TextEditor = () => {
           </Button>
         </div>
 
-        {showHTML ? (
+        <div className="flex flex-wrap gap-2 pb-4 border-b">
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={() => document.getElementById('fileInput')?.click()}
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Import
+            </Button>
+            <input
+              id="fileInput"
+              type="file"
+              onChange={handleFileImport}
+              className="hidden"
+              accept=".txt,.md"
+            />
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={handleFileExport}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={encodeBase64}
+            >
+              <Code className="h-4 w-4 mr-2" />
+              Encode Base64
+            </Button>
+            <Button
+              variant="outline"
+              className="hover:bg-slate-100"
+              onClick={decodeBase64}
+            >
+              <Code className="h-4 w-4 mr-2" />
+              Decode Base64
+            </Button>
+          </div>
+
+          <Button
+            variant="outline"
+            className="hover:bg-slate-100"
+            onClick={() => {
+              if (isMarkdownPreview) {
+                setIsMarkdownPreview(false);
+              } else {
+                convertToMarkdown();
+              }
+            }}
+          >
+            <FileCode className="h-4 w-4 mr-2" />
+            {isMarkdownPreview ? 'Edit Mode' : 'Preview Markdown'}
+          </Button>
+        </div>
+
+        {isMarkdownPreview ? (
+          <div 
+            className="w-full h-64 p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: markdownHTML }}
+          />
+        ) : showHTML ? (
           <div className="w-full h-64 p-4 border rounded-lg bg-slate-50 overflow-auto">
             <pre className="text-sm font-mono">{convertedHTML}</pre>
           </div>
