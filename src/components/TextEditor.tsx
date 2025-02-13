@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -39,17 +39,21 @@ export const TextEditor = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    updateCounts(text);
+    const timeoutId = setTimeout(() => {
+      updateCounts(text);
+    }, 300); // Debounce count updates
+
+    return () => clearTimeout(timeoutId);
   }, [text]);
 
-  const updateCounts = (value: string) => {
+  const updateCounts = useCallback((value: string) => {
     setCharCount(value.length);
     setWordCount(value.trim() === '' ? 0 : value.trim().split(/\s+/).length);
-  };
+  }, []);
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
-  };
+  }, []);
 
   const handleCaseChange = (type: string) => {
     switch (type) {
@@ -72,7 +76,7 @@ export const TextEditor = () => {
     }
   };
 
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(text);
       toast({
@@ -82,11 +86,11 @@ export const TextEditor = () => {
     } catch (err) {
       toast({
         title: "Failed to copy",
-        description: "Please try again.",
+        description: "Please try again or use Ctrl+C/Cmd+C.",
         variant: "destructive",
       });
     }
-  };
+  }, [text, toast]);
 
   const handleAlignment = (alignment: string) => {
     const textarea = document.querySelector('textarea');
@@ -246,22 +250,28 @@ export const TextEditor = () => {
     });
   };
 
-  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileImport = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
+    try {
+      setFileName(file.name);
+      const content = await file.text();
       setText(content);
       toast({
         title: "File imported",
         description: `Successfully imported ${file.name}`,
       });
-    };
-    reader.readAsText(file);
-  };
+    } catch (error) {
+      toast({
+        title: "Import failed",
+        description: "Failed to read the file. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      if (e.target) e.target.value = '';
+    }
+  }, [toast]);
 
   const handleFileExport = () => {
     const blob = new Blob([text], { type: 'text/plain' });
@@ -313,7 +323,16 @@ export const TextEditor = () => {
     }
   };
 
-  const convertToMarkdown = () => {
+  const convertToMarkdown = useCallback(() => {
+    if (!text.trim()) {
+      toast({
+        title: "No content",
+        description: "Please enter some text to preview as Markdown.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const html = text
       .replace(/#{6}\s?([^\n]+)/g, '<h6>$1</h6>')
       .replace(/#{5}\s?([^\n]+)/g, '<h5>$1</h5>')
@@ -334,7 +353,7 @@ export const TextEditor = () => {
       title: "Markdown preview",
       description: "Viewing markdown preview. Click again to return to edit mode.",
     });
-  };
+  }, [text, toast]);
 
   const fontFamilies = [
     { label: 'Inter', value: 'Inter' },
@@ -357,6 +376,26 @@ export const TextEditor = () => {
     { label: 'Relaxed', value: '1.8' },
     { label: 'Double', value: '2' },
   ];
+
+  useEffect(() => {
+    const handleKeyboard = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+        e.preventDefault();
+        handleStyle('bold');
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+        e.preventDefault();
+        handleStyle('italic');
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleFileExport();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard);
+  }, [handleStyle, handleFileExport]);
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-fadeIn">
@@ -667,19 +706,19 @@ export const TextEditor = () => {
 
         {isMarkdownPreview ? (
           <div 
-            className="w-full h-64 p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: markdownHTML }}
           />
         ) : showHTML ? (
-          <div className="w-full h-64 p-4 border rounded-lg bg-slate-50 overflow-auto">
-            <pre className="text-sm font-mono">{convertedHTML}</pre>
+          <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
+            <pre className="text-sm font-mono whitespace-pre-wrap">{convertedHTML}</pre>
           </div>
         ) : (
           <textarea
             value={text}
             onChange={handleTextChange}
-            className="w-full h-64 p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-none font-sans"
-            placeholder="Enter or paste your text here..."
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans"
+            placeholder="Enter or paste your text here... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"
             style={{
               fontFamily,
               fontSize,
@@ -694,6 +733,7 @@ export const TextEditor = () => {
           <div className="flex gap-4">
             <span>{wordCount} words</span>
             <span>{charCount} characters</span>
+            {fileName && <span>File: {fileName}</span>}
           </div>
           <Button
             variant="outline"
@@ -705,6 +745,10 @@ export const TextEditor = () => {
             Copy
           </Button>
         </div>
+      </div>
+
+      <div className="text-center text-sm text-slate-500 mt-4">
+        <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + S (Save)</p>
       </div>
     </div>
   );
