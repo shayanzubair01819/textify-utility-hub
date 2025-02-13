@@ -18,6 +18,7 @@ import {
   Upload,
   Code,
   FileCode,
+  RefreshCw,
 } from 'lucide-react';
 
 export const TextEditor = () => {
@@ -528,6 +529,34 @@ export const TextEditor = () => {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [handleStyle, handleFileExport]);
 
+  const clearFormatting = () => {
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+      // Reset all styling properties
+      textarea.style.fontFamily = 'Inter';
+      textarea.style.fontSize = '16px';
+      textarea.style.lineHeight = '1.5';
+      textarea.style.color = '#000000';
+      textarea.style.backgroundColor = 'transparent';
+      textarea.style.fontWeight = 'normal';
+      textarea.style.fontStyle = 'normal';
+      textarea.style.textDecoration = 'none';
+      textarea.style.textAlign = 'left';
+
+      // Reset all state variables related to formatting
+      setFontFamily('Inter');
+      setFontSize('16px');
+      setLineHeight('1.5');
+      setTextColor('#000000');
+      setBackgroundColor('transparent');
+
+      toast({
+        title: "Formatting cleared",
+        description: "All text formatting has been reset to default.",
+      });
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 animate-fadeIn">
       <div className="text-center mb-4 sm:mb-8">
@@ -588,6 +617,15 @@ export const TextEditor = () => {
               className="hover:bg-slate-100"
             >
               <Underline className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={clearFormatting}
+              className="hover:bg-slate-100"
+              title="Clear Formatting"
+            >
+              <RefreshCw className="h-4 w-4" />
             </Button>
           </div>
 
