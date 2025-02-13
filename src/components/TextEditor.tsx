@@ -238,11 +238,8 @@ export const TextEditor = () => {
       const textarea = document.querySelector('textarea');
       if (textarea) {
         const highlightedText = text.replace(regex, `<span style="background-color: #9b87f5; color: white;">$1</span>`);
-        
-        // Hide the textarea
         textarea.style.display = 'none';
         
-        // Create or update the highlight display div
         let highlightDiv = document.getElementById('highlight-display');
         if (!highlightDiv) {
           highlightDiv = document.createElement('div');
@@ -251,25 +248,11 @@ export const TextEditor = () => {
         }
         
         highlightDiv.innerHTML = highlightedText.replace(/\n/g, '<br>');
-        highlightDiv.style.cssText = `
-          white-space: pre-wrap;
-          font-family: ${fontFamily};
-          font-size: ${fontSize};
-          line-height: ${lineHeight};
-          color: ${textColor};
-          background-color: ${backgroundColor};
-          padding: 12px 16px;
-          border: 1px solid #e2e8f0;
-          border-radius: 0.5rem;
-          min-height: 16rem;
-          max-height: 32rem;
-          overflow-y: auto;
-        `;
+        highlightDiv.style.cssText = getHighlightStyles();
 
-        // Add a clear button
         const clearButton = document.createElement('button');
         clearButton.textContent = 'Clear Search';
-        clearButton.className = 'absolute top-2 right-2 px-3 py-1 text-sm bg-slate-100 hover:bg-slate-200 rounded';
+        clearButton.className = 'absolute top-2 right-2 px-3 py-1 text-sm bg-slate-100 hover:bg-slate-200 rounded z-10';
         clearButton.onclick = clearHighlights;
         highlightDiv.appendChild(clearButton);
       }
@@ -508,6 +491,23 @@ export const TextEditor = () => {
     { label: 'Double', value: '2' },
   ];
 
+  const getHighlightStyles = () => `
+    white-space: pre-wrap;
+    font-family: ${fontFamily};
+    font-size: ${fontSize};
+    line-height: ${lineHeight};
+    color: ${textColor};
+    background-color: ${backgroundColor};
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    min-height: 16rem;
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    width: 100%;
+    position: relative;
+  `;
+
   useEffect(() => {
     const handleKeyboard = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
@@ -529,14 +529,14 @@ export const TextEditor = () => {
   }, [handleStyle, handleFileExport]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-fadeIn">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary mb-2">Text Formatter</h1>
-        <p className="text-slate-600">A beautiful tool for all your text formatting needs</p>
+    <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 animate-fadeIn">
+      <div className="text-center mb-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">Text Formatter</h1>
+        <p className="text-sm sm:text-base text-slate-600">A beautiful tool for all your text formatting needs</p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-        <div className="flex flex-wrap gap-2 pb-4 border-b">
+      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
+        <div className="flex flex-wrap gap-2 pb-4 border-b overflow-x-auto">
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -627,7 +627,7 @@ export const TextEditor = () => {
           <select
             value={fontFamily}
             onChange={handleFontChange}
-            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             {fontFamilies.map(font => (
               <option key={font.value} value={font.value}>
@@ -639,7 +639,7 @@ export const TextEditor = () => {
           <select
             value={fontSize}
             onChange={handleFontSizeChange}
-            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             {fontSizes.map(size => (
               <option key={size.value} value={size.value}>
@@ -651,7 +651,7 @@ export const TextEditor = () => {
           <select
             value={lineHeight}
             onChange={handleLineHeightChange}
-            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
             {lineHeights.map(height => (
               <option key={height.value} value={height.value}>
@@ -728,12 +728,12 @@ export const TextEditor = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search text..."
-              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="flex-1 px-3 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
             <Button
               variant="outline"
               onClick={handleSearch}
-              className="hover:bg-slate-100"
+              className="hover:bg-slate-100 whitespace-nowrap"
             >
               Search
             </Button>
@@ -744,12 +744,12 @@ export const TextEditor = () => {
               value={replaceText}
               onChange={(e) => setReplaceText(e.target.value)}
               placeholder="Replace with..."
-              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="flex-1 px-3 py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
             <Button
               variant="outline"
               onClick={handleReplace}
-              className="hover:bg-slate-100"
+              className="hover:bg-slate-100 whitespace-nowrap"
             >
               Replace All
             </Button>
@@ -848,7 +848,7 @@ export const TextEditor = () => {
           <textarea
             value={text}
             onChange={handleTextChange}
-            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans"
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans text-sm sm:text-base"
             placeholder="Enter or paste your text here... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"
             style={{
               fontFamily,
@@ -860,11 +860,11 @@ export const TextEditor = () => {
           />
         )}
 
-        <div className="flex items-center justify-between text-sm text-slate-600">
-          <div className="flex gap-4">
+        <div className="flex flex-wrap items-center justify-between text-xs sm:text-sm text-slate-600 gap-2">
+          <div className="flex flex-wrap gap-2 sm:gap-4">
             <span>{wordCount} words</span>
             <span>{charCount} characters</span>
-            {fileName && <span>File: {fileName}</span>}
+            {fileName && <span className="truncate max-w-[200px]">File: {fileName}</span>}
           </div>
           <Button
             variant="outline"
@@ -878,7 +878,7 @@ export const TextEditor = () => {
         </div>
       </div>
 
-      <div className="text-center text-sm text-slate-500 mt-4">
+      <div className="text-center text-xs sm:text-sm text-slate-500 mt-4">
         <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + S (Save)</p>
       </div>
     </div>
