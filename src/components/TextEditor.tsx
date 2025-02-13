@@ -19,6 +19,7 @@ import {
   Code,
   FileCode,
 } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export const TextEditor = () => {
   const [text, setText] = useState('');
@@ -202,16 +203,38 @@ export const TextEditor = () => {
 
   const handleSearch = () => {
     if (!searchTerm) return;
-    const regex = new RegExp(searchTerm, 'gi');
-    const newText = text.replace(regex, match => `<mark>${match}</mark>`);
+
     const textarea = document.querySelector('textarea');
-    if (textarea) {
-      textarea.innerHTML = newText;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const currentText = text;
+    if (searchTerm) {
+      const regex = new RegExp(searchTerm, 'gi');
+      const matches = Array.from(currentText.matchAll(regex));
+      
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = currentText;
+      
+      matches.forEach(match => {
+        const matchIndex = match.index || 0;
+        const matchText = match[0];
+        const span = `<mark style="background-color: #fff3cd; padding: 0 2px; border-radius: 2px;">${matchText}</mark>`;
+        tempDiv.innerHTML = tempDiv.innerHTML.slice(0, matchIndex) + span + tempDiv.innerHTML.slice(matchIndex + matchText.length);
+      });
+
+      setConvertedHTML(tempDiv.innerHTML);
+      setShowHTML(true);
+      
+      toast({
+        title: "Search results",
+        description: `Found ${matches.length} matches for "${searchTerm}"`,
+      });
     }
-    toast({
-      title: "Search completed",
-      description: `Highlighted all occurrences of "${searchTerm}"`,
-    });
+
+    textarea.setSelectionRange(start, end);
   };
 
   const handleReplace = () => {
@@ -397,6 +420,69 @@ export const TextEditor = () => {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [handleStyle, handleFileExport]);
 
+  const ColorPicker = ({ value, onChange, title }: { value: string; onChange: (color: string) => void; title: string }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [tempColor, setTempColor] = useState(value);
+    
+    const presetColors = [
+      '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
+      '#FFFF00', '#FF00FF', '#00FFFF', '#808080', '#800000',
+      '#808000', '#008000', '#800080', '#008080', '#000080',
+      '#FFA500', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00',
+    ];
+
+    return (
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-[150px] justify-start text-left font-normal"
+          >
+            <div
+              className="w-4 h-4 rounded-full mr-2 shrink-0"
+              style={{ backgroundColor: value }}
+            />
+            {title}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[280px]">
+          <div className="space-y-4">
+            <div className="flex flex-col space-y-2">
+              <label className="text-sm font-medium">Custom Color</label>
+              <input
+                type="color"
+                value={tempColor}
+                onChange={(e) => {
+                  setTempColor(e.target.value);
+                  onChange(e.target.value);
+                }}
+                className="w-full h-8 cursor-pointer"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Preset Colors</label>
+              <div className="grid grid-cols-5 gap-2">
+                {presetColors.map((color) => (
+                  <button
+                    key={color}
+                    className={`w-8 h-8 rounded-full border-2 ${
+                      tempColor === color ? 'border-primary' : 'border-transparent'
+                    }`}
+                    style={{ backgroundColor: color }}
+                    onClick={() => {
+                      setTempColor(color);
+                      onChange(color);
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
+    );
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-fadeIn">
       <div className="text-center mb-8">
@@ -530,19 +616,15 @@ export const TextEditor = () => {
           </select>
 
           <div className="flex items-center gap-2">
-            <input
-              type="color"
+            <ColorPicker
               value={textColor}
               onChange={handleTextColorChange}
-              className="w-8 h-8 rounded cursor-pointer"
               title="Text Color"
             />
-            <input
-              type="color"
+            <ColorPicker
               value={backgroundColor}
               onChange={handleBackgroundColorChange}
-              className="w-8 h-8 rounded cursor-pointer"
-              title="Highlight Color"
+              title="Background Color"
             />
           </div>
         </div>
@@ -711,7 +793,10 @@ export const TextEditor = () => {
           />
         ) : showHTML ? (
           <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
-            <pre className="text-sm font-mono whitespace-pre-wrap">{convertedHTML}</pre>
+            <div
+              className="whitespace-pre-wrap font-mono text-sm"
+              dangerouslySetInnerHTML={{ __html: convertedHTML }}
+            />
           </div>
         ) : (
           <textarea
