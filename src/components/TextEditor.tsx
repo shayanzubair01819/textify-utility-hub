@@ -200,18 +200,92 @@ export const TextEditor = () => {
     });
   };
 
+  const highlightSearchResults = (content: string, term: string): string => {
+    if (!term) return content;
+    try {
+      const regex = new RegExp(`(${term})`, 'gi');
+      return content.replace(regex, `<span style="background-color: #9b87f5; color: white;">$1</span>`);
+    } catch (e) {
+      // In case of invalid regex characters
+      return content;
+    }
+  };
+
   const handleSearch = () => {
-    if (!searchTerm) return;
-    const regex = new RegExp(searchTerm, 'gi');
-    const newText = text.replace(regex, match => `<mark>${match}</mark>`);
+    if (!searchTerm) {
+      toast({
+        title: "Search term required",
+        description: "Please enter a text to search.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const matches = text.match(new RegExp(searchTerm, 'gi'));
+    const count = matches ? matches.length : 0;
+
+    if (count === 0) {
+      toast({
+        title: "No matches found",
+        description: `No occurrences of "${searchTerm}" were found.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const highlightedText = highlightSearchResults(text, searchTerm);
     const textarea = document.querySelector('textarea');
     if (textarea) {
-      textarea.innerHTML = newText;
+      // Store original text to restore later
+      textarea.style.display = 'none';
+      
+      // Create or update the highlight display div
+      let highlightDiv = document.getElementById('highlight-display');
+      if (!highlightDiv) {
+        highlightDiv = document.createElement('div');
+        highlightDiv.id = 'highlight-display';
+        textarea.parentNode?.insertBefore(highlightDiv, textarea);
+      }
+      
+      highlightDiv.innerHTML = highlightedText.replace(/\n/g, '<br>');
+      highlightDiv.style.cssText = `
+        white-space: pre-wrap;
+        font-family: ${fontFamily};
+        font-size: ${fontSize};
+        line-height: ${lineHeight};
+        color: ${textColor};
+        background-color: ${backgroundColor};
+        padding: 12px 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        min-height: 16rem;
+        max-height: 32rem;
+        overflow-y: auto;
+      `;
+
+      // Add a clear button
+      const clearButton = document.createElement('button');
+      clearButton.textContent = 'Clear Search';
+      clearButton.className = 'absolute top-2 right-2 px-3 py-1 text-sm bg-slate-100 hover:bg-slate-200 rounded';
+      clearButton.onclick = clearHighlights;
+      highlightDiv.appendChild(clearButton);
     }
+
     toast({
       title: "Search completed",
-      description: `Highlighted all occurrences of "${searchTerm}"`,
+      description: `Found ${count} ${count === 1 ? 'match' : 'matches'} for "${searchTerm}"`,
     });
+  };
+
+  const clearHighlights = () => {
+    const textarea = document.querySelector('textarea');
+    const highlightDiv = document.getElementById('highlight-display');
+    
+    if (textarea && highlightDiv) {
+      textarea.style.display = 'block';
+      highlightDiv.remove();
+      setSearchTerm('');
+    }
   };
 
   const handleReplace = () => {
