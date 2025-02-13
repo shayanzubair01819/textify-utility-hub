@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   AlignLeft,
   AlignCenter,
@@ -18,6 +19,7 @@ import {
   Upload,
   Code,
   FileCode,
+  Menu,
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -38,6 +40,7 @@ export const TextEditor = () => {
   const [isMarkdownPreview, setIsMarkdownPreview] = useState(false);
   const [markdownHTML, setMarkdownHTML] = useState('');
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -141,7 +144,6 @@ export const TextEditor = () => {
     }
   };
 
-  // Update the color change handlers to work with both string and event inputs
   const handleTextColorChange = useCallback((colorValue: string | React.ChangeEvent<HTMLInputElement>) => {
     const newColor = typeof colorValue === 'string' ? colorValue : colorValue.target.value;
     setTextColor(newColor);
@@ -423,7 +425,6 @@ export const TextEditor = () => {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [handleStyle, handleFileExport]);
 
-  // Enhanced ColorPicker component
   const ColorPicker = ({ value, onChange, title }: { value: string; onChange: (color: string) => void; title: string }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [tempColor, setTempColor] = useState(value);
@@ -493,139 +494,100 @@ export const TextEditor = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-fadeIn">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary mb-2">Text Formatter</h1>
-        <p className="text-slate-600">A beautiful tool for all your text formatting needs</p>
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6">
+      <div className="text-center space-y-2 sm:space-y-3">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Advanced Text Editor
+        </h1>
+        <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto px-4">
+          A powerful tool for formatting, converting, and manipulating text
+        </p>
       </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-        <div className="flex flex-wrap gap-2 pb-4 border-b">
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleAlignment('left')}
-              className="hover:bg-slate-100"
-            >
-              <AlignLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleAlignment('center')}
-              className="hover:bg-slate-100"
-            >
-              <AlignCenter className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleAlignment('right')}
-              className="hover:bg-slate-100"
-            >
-              <AlignRight className="h-4 w-4" />
-            </Button>
+      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-3 border-b">
+          <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-1 p-1 bg-slate-50 rounded-lg">
+              <Button
+                variant="ghost"
+                size={isMobile ? "sm" : "default"}
+                onClick={() => handleAlignment('left')}
+                className="hover:bg-slate-100"
+              >
+                <AlignLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size={isMobile ? "sm" : "default"}
+                onClick={() => handleAlignment('center')}
+                className="hover:bg-slate-100"
+              >
+                <AlignCenter className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size={isMobile ? "sm" : "default"}
+                onClick={() => handleAlignment('right')}
+                className="hover:bg-slate-100"
+              >
+                <AlignRight className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-1 p-1 bg-slate-50 rounded-lg">
+              <Button
+                variant="ghost"
+                size={isMobile ? "sm" : "default"}
+                onClick={() => handleStyle('bold')}
+                className="hover:bg-slate-100"
+              >
+                <Bold className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size={isMobile ? "sm" : "default"}
+                onClick={() => handleStyle('italic')}
+                className="hover:bg-slate-100"
+              >
+                <Italic className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size={isMobile ? "sm" : "default"}
+                onClick={() => handleStyle('underline')}
+                className="hover:bg-slate-100"
+              >
+                <Underline className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleStyle('bold')}
-              className="hover:bg-slate-100"
+          <div className="flex flex-wrap gap-2">
+            <select
+              value={fontFamily}
+              onChange={handleFontChange}
+              className="px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-slate-50"
             >
-              <Bold className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleStyle('italic')}
-              className="hover:bg-slate-100"
+              {fontFamilies.map(font => (
+                <option key={font.value} value={font.value}>
+                  {font.label}
+                </option>
+              ))}
+            </select>
+            <select
+              value={fontSize}
+              onChange={handleFontSizeChange}
+              className="px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 bg-slate-50"
             >
-              <Italic className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleStyle('underline')}
-              className="hover:bg-slate-100"
-            >
-              <Underline className="h-4 w-4" />
-            </Button>
+              {fontSizes.map(size => (
+                <option key={size.value} value={size.value}>
+                  {size.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => handleCaseChange('upper')}
-              className="hover:bg-slate-100"
-            >
-              ABC
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleCaseChange('lower')}
-              className="hover:bg-slate-100"
-            >
-              abc
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleCaseChange('title')}
-              className="hover:bg-slate-100"
-            >
-              Title
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleCaseChange('sentence')}
-              className="hover:bg-slate-100"
-            >
-              Sentence
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-4 pb-4 border-b">
-          <select
-            value={fontFamily}
-            onChange={handleFontChange}
-            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            {fontFamilies.map(font => (
-              <option key={font.value} value={font.value}>
-                {font.label}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={fontSize}
-            onChange={handleFontSizeChange}
-            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            {fontSizes.map(size => (
-              <option key={size.value} value={size.value}>
-                {size.label}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={lineHeight}
-            onChange={handleLineHeightChange}
-            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            {lineHeights.map(height => (
-              <option key={height.value} value={height.value}>
-                {height.label}
-              </option>
-            ))}
-          </select>
-
-          {/* Color Controls */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap gap-2">
             <ColorPicker
               value={textColor}
               onChange={(color: string) => handleTextColorChange(color)}
@@ -637,152 +599,57 @@ export const TextEditor = () => {
               title="Background Color"
             />
           </div>
-        </div>
 
-        <div className="flex flex-wrap gap-2 pb-4 border-b">
-          <Button
-            variant="outline"
-            onClick={removeDuplicateWords}
-            className="hover:bg-slate-100"
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            Remove Duplicates
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => sortWords(true)}
-            className="hover:bg-slate-100"
-          >
-            <SortAsc className="h-4 w-4 mr-2" />
-            Sort A-Z
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => sortWords(false)}
-            className="hover:bg-slate-100"
-          >
-            <SortDesc className="h-4 w-4 mr-2" />
-            Sort Z-A
-          </Button>
-          <Button
-            variant="outline"
-            onClick={shuffleWords}
-            className="hover:bg-slate-100"
-          >
-            <Shuffle className="h-4 w-4 mr-2" />
-            Shuffle
-          </Button>
-          <Button
-            variant="outline"
-            onClick={generateLoremIpsum}
-            className="hover:bg-slate-100"
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Lorem Ipsum
-          </Button>
-        </div>
-
-        <div className="flex flex-wrap gap-4 pb-4 border-b">
-          <div className="flex-1 flex gap-2">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search text..."
-              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-            <Button
-              variant="outline"
-              onClick={handleSearch}
-              className="hover:bg-slate-100"
-            >
-              Search
-            </Button>
-          </div>
-          <div className="flex-1 flex gap-2">
-            <input
-              type="text"
-              value={replaceText}
-              onChange={(e) => setReplaceText(e.target.value)}
-              placeholder="Replace with..."
-              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-            <Button
-              variant="outline"
-              onClick={handleReplace}
-              className="hover:bg-slate-100"
-            >
-              Replace All
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex-1 flex gap-2">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search..."
+                className="flex-1 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+              <Button
+                variant="outline"
+                size={isMobile ? "sm" : "default"}
+                onClick={handleSearch}
+                className="whitespace-nowrap"
+              >
+                Search
+              </Button>
+            </div>
+            <div className="flex-1 flex gap-2">
+              <input
+                type="text"
+                value={replaceText}
+                onChange={(e) => setReplaceText(e.target.value)}
+                placeholder="Replace..."
+                className="flex-1 px-2 py-1 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+              <Button
+                variant="outline"
+                size={isMobile ? "sm" : "default"}
+                onClick={handleReplace}
+                className="whitespace-nowrap"
+              >
+                Replace
+              </Button>
+            </div>
           </div>
         </div>
 
-        <div className="flex gap-2 pb-4 border-b">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pb-3 border-b">
           <Button
             variant="outline"
+            size={isMobile ? "sm" : "default"}
             onClick={convertToHTML}
-            className="hover:bg-slate-100"
+            className="w-full"
           >
-            Convert to HTML
+            HTML
           </Button>
           <Button
             variant="outline"
-            onClick={convertFromHTML}
-            className="hover:bg-slate-100"
-          >
-            HTML to Text
-          </Button>
-        </div>
-
-        <div className="flex flex-wrap gap-2 pb-4 border-b">
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="hover:bg-slate-100"
-              onClick={() => document.getElementById('fileInput')?.click()}
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Import
-            </Button>
-            <input
-              id="fileInput"
-              type="file"
-              onChange={handleFileImport}
-              className="hidden"
-              accept=".txt,.md"
-            />
-            <Button
-              variant="outline"
-              className="hover:bg-slate-100"
-              onClick={handleFileExport}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-          </div>
-
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="hover:bg-slate-100"
-              onClick={encodeBase64}
-            >
-              <Code className="h-4 w-4 mr-2" />
-              Encode Base64
-            </Button>
-            <Button
-              variant="outline"
-              className="hover:bg-slate-100"
-              onClick={decodeBase64}
-            >
-              <Code className="h-4 w-4 mr-2" />
-              Decode Base64
-            </Button>
-          </div>
-
-          <Button
-            variant="outline"
-            className="hover:bg-slate-100"
+            size={isMobile ? "sm" : "default"}
             onClick={() => {
               if (isMarkdownPreview) {
                 setIsMarkdownPreview(false);
@@ -790,19 +657,63 @@ export const TextEditor = () => {
                 convertToMarkdown();
               }
             }}
+            className="w-full"
           >
-            <FileCode className="h-4 w-4 mr-2" />
-            {isMarkdownPreview ? 'Edit Mode' : 'Preview Markdown'}
+            {isMarkdownPreview ? 'Edit' : 'Preview'}
+          </Button>
+          <Button
+            variant="outline"
+            size={isMobile ? "sm" : "default"}
+            onClick={encodeBase64}
+            className="w-full"
+          >
+            Encode
+          </Button>
+          <Button
+            variant="outline"
+            size={isMobile ? "sm" : "default"}
+            onClick={decodeBase64}
+            className="w-full"
+          >
+            Decode
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2 pb-3 border-b">
+          <Button
+            variant="outline"
+            size={isMobile ? "sm" : "default"}
+            onClick={() => document.getElementById('fileInput')?.click()}
+            className="flex-1 sm:flex-none"
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Import
+          </Button>
+          <input
+            id="fileInput"
+            type="file"
+            onChange={handleFileImport}
+            className="hidden"
+            accept=".txt,.md"
+          />
+          <Button
+            variant="outline"
+            size={isMobile ? "sm" : "default"}
+            onClick={handleFileExport}
+            className="flex-1 sm:flex-none"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export
           </Button>
         </div>
 
         {isMarkdownPreview ? (
           <div 
-            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
+            className="w-full min-h-[16rem] sm:min-h-[24rem] p-3 sm:p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: markdownHTML }}
           />
         ) : showHTML ? (
-          <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
+          <div className="w-full min-h-[16rem] sm:min-h-[24rem] p-3 sm:p-4 border rounded-lg bg-slate-50 overflow-auto">
             <div
               className="whitespace-pre-wrap font-mono text-sm"
               dangerouslySetInnerHTML={{ __html: convertedHTML }}
@@ -812,8 +723,8 @@ export const TextEditor = () => {
           <textarea
             value={text}
             onChange={handleTextChange}
-            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans"
-            placeholder="Enter or paste your text here... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"
+            className="w-full min-h-[16rem] sm:min-h-[24rem] p-3 sm:p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans"
+            placeholder={isMobile ? "Enter text here..." : "Enter or paste your text here... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"}
             style={{
               fontFamily,
               fontSize,
@@ -825,13 +736,18 @@ export const TextEditor = () => {
         )}
 
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <div className="flex gap-4">
+          <div className="flex flex-wrap items-center gap-3">
             <span>{wordCount} words</span>
-            <span>{charCount} characters</span>
-            {fileName && <span>File: {fileName}</span>}
+            <span>{charCount} chars</span>
+            {fileName && (
+              <span className="flex items-center gap-1">
+                <FileText className="h-4 w-4" />
+                {fileName}
+              </span>
+            )}
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={handleCopy}
             className="hover:bg-slate-100"
@@ -842,9 +758,16 @@ export const TextEditor = () => {
         </div>
       </div>
 
-      <div className="text-center text-sm text-slate-500 mt-4">
-        <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + S (Save)</p>
-      </div>
+      {!isMobile && (
+        <div className="text-center">
+          <div className="inline-block px-3 py-2 bg-slate-100 rounded-lg text-xs sm:text-sm text-slate-600">
+            <span className="font-medium">Shortcuts:</span>{' '}
+            <kbd className="px-1.5 py-0.5 bg-white rounded border shadow-sm mx-1">Ctrl/⌘ + B</kbd> Bold,{' '}
+            <kbd className="px-1.5 py-0.5 bg-white rounded border shadow-sm mx-1">Ctrl/⌘ + I</kbd> Italic,{' '}
+            <kbd className="px-1.5 py-0.5 bg-white rounded border shadow-sm mx-1">Ctrl/⌘ + S</kbd> Save
+          </div>
+        </div>
+      )}
     </div>
   );
 };
