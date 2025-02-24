@@ -495,8 +495,9 @@ export const TextEditor = () => {
   };
   return <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 animate-fadeIn">
       <div className="text-center mb-4 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">Bold Text Generator – Style &amp; Format Text for Social Media</h1>
-        <p className="text-sm sm:text-base text-slate-600">Easily Format, Style &amp; Create Bold Text with One Click</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">LinkedIn Text Formatter – Style &amp; Format Text for LinkedIn Posts</h1>
+        <p className="text-sm sm:text-base text-slate-600">Easily Format Text for LinkedIn with Our Free Tool
+      </p>
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
