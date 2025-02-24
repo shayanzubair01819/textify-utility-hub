@@ -1,32 +1,11 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Bold,
-  Italic,
-  Underline,
-  Strikethrough,
-  Type,
-  Sparkles,
-  ChevronRight,
-  Search,
-  GraduationCap,
-  Users,
-  Code,
-  Briefcase,
-  ArrowRight,
-  Wand2,
-  FileText,
-  List,
-  CaseUpper,
-} from "lucide-react";
+import { Bold, Italic, Underline, Strikethrough, Type, Sparkles, ChevronRight, Search, GraduationCap, Users, Code, Briefcase, ArrowRight, Wand2, FileText, List, CaseUpper } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-slate-50">
+  return <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-slate-50 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -49,11 +28,7 @@ const Index = () => {
           <div className="max-w-2xl mx-auto">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <Input
-                type="search"
-                placeholder="Search for a text tool..."
-                className="w-full pl-10 bg-white"
-              />
+              <Input type="search" placeholder="Search for a text tool..." className="w-full pl-10 bg-white" />
             </div>
           </div>
         </div>
@@ -100,15 +75,31 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Featured Text Formatting Tools</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Bold, title: "Bold Text Generator", desc: "Make text stand out with bold formatting" },
-              { icon: Italic, title: "Italic Text Generator", desc: "Add stylish emphasis to your words" },
-              { icon: Underline, title: "Underline Text Tool", desc: "Highlight key text with underlines" },
-              { icon: Strikethrough, title: "Strikethrough Text Maker", desc: "Cross out words with a single click" },
-              { icon: Type, title: "Case Converter", desc: "Switch between text cases easily" },
-              { icon: Sparkles, title: "Fancy Text Generator", desc: "Create eye-catching, decorative fonts" },
-            ].map((tool, index) => (
-              <Card key={index} className="transition-transform hover:scale-105">
+            {[{
+            icon: Bold,
+            title: "Bold Text Generator",
+            desc: "Make text stand out with bold formatting"
+          }, {
+            icon: Italic,
+            title: "Italic Text Generator",
+            desc: "Add stylish emphasis to your words"
+          }, {
+            icon: Underline,
+            title: "Underline Text Tool",
+            desc: "Highlight key text with underlines"
+          }, {
+            icon: Strikethrough,
+            title: "Strikethrough Text Maker",
+            desc: "Cross out words with a single click"
+          }, {
+            icon: Type,
+            title: "Case Converter",
+            desc: "Switch between text cases easily"
+          }, {
+            icon: Sparkles,
+            title: "Fancy Text Generator",
+            desc: "Create eye-catching, decorative fonts"
+          }].map((tool, index) => <Card key={index} className="transition-transform hover:scale-105">
                 <CardContent className="p-6 text-center">
                   <tool.icon className="mx-auto mb-4 text-primary" />
                   <h3 className="font-semibold mb-2">{tool.title}</h3>
@@ -117,8 +108,7 @@ const Index = () => {
                     Use This Tool
                   </Button>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -128,20 +118,29 @@ const Index = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-12">How It Works</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { step: "1", title: "Choose a Tool", desc: "Select from the available text formatting options" },
-              { step: "2", title: "Enter Text", desc: "Paste or type your text into the input box" },
-              { step: "3", title: "Apply Formatting", desc: "Click the format button to tweak your text" },
-              { step: "4", title: "Copy & Use", desc: "Copy the formatted text and use it anywhere" },
-            ].map((step, index) => (
-              <div key={index} className="relative">
+            {[{
+            step: "1",
+            title: "Choose a Tool",
+            desc: "Select from the available text formatting options"
+          }, {
+            step: "2",
+            title: "Enter Text",
+            desc: "Paste or type your text into the input box"
+          }, {
+            step: "3",
+            title: "Apply Formatting",
+            desc: "Click the format button to tweak your text"
+          }, {
+            step: "4",
+            title: "Copy & Use",
+            desc: "Copy the formatted text and use it anywhere"
+          }].map((step, index) => <div key={index} className="relative">
                 <div className="bg-slate-50 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4 text-primary font-bold">
                   {step.step}
                 </div>
                 <h3 className="font-semibold mb-2">{step.title}</h3>
                 <p className="text-gray-600">{step.desc}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -151,18 +150,27 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Who Can Use Text Tweaker?</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: GraduationCap, title: "Students & Writers", desc: "Format essays, articles, and reports easily" },
-              { icon: Users, title: "Social Media Users", desc: "Create bold, stylish text for social media" },
-              { icon: Code, title: "Developers & Designers", desc: "Get clean, formatted text for web and coding" },
-              { icon: Briefcase, title: "Business Professionals", desc: "Format emails, reports, and presentations" },
-            ].map((audience, index) => (
-              <div key={index} className="text-center p-6 bg-white rounded-lg shadow-sm">
+            {[{
+            icon: GraduationCap,
+            title: "Students & Writers",
+            desc: "Format essays, articles, and reports easily"
+          }, {
+            icon: Users,
+            title: "Social Media Users",
+            desc: "Create bold, stylish text for social media"
+          }, {
+            icon: Code,
+            title: "Developers & Designers",
+            desc: "Get clean, formatted text for web and coding"
+          }, {
+            icon: Briefcase,
+            title: "Business Professionals",
+            desc: "Format emails, reports, and presentations"
+          }].map((audience, index) => <div key={index} className="text-center p-6 bg-white rounded-lg shadow-sm">
                 <audience.icon className="mx-auto mb-4 text-primary" />
                 <h3 className="font-semibold mb-2">{audience.title}</h3>
                 <p className="text-gray-600">{audience.desc}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -233,41 +241,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white py-12 px-4 sm:px-6 lg:px-8 border-t">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <h3 className="font-semibold">Quick Links</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary">About</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Contact</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Blog</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">FAQs</a></li>
-              </ul>
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-semibold">Popular Tools</h3>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-600 hover:text-primary">Bold Text</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Italic Text</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-primary">Case Converter</a></li>
-              </ul>
-            </div>
-            <div className="md:col-span-2">
-              <p className="text-gray-600">
-                Text Tweaker provides free online text formatting tools, including bold, italic,
-                underline, strikethrough, case converters, and more. Format your text instantly
-                with our easy-to-use online tools.
-              </p>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t text-center text-gray-600">
-            <p>&copy; {new Date().getFullYear()} Text Tweaker. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+      
+    </div>;
 };
-
 export default Index;
