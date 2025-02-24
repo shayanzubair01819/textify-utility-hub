@@ -7,7 +7,7 @@ import {
   Bold,
   Italic,
   Underline,
-  StrikethroughSquare,
+  Strikethrough,
   Type,
   Sparkles,
   ChevronRight,
@@ -104,7 +104,7 @@ const Index = () => {
               { icon: Bold, title: "Bold Text Generator", desc: "Make text stand out with bold formatting" },
               { icon: Italic, title: "Italic Text Generator", desc: "Add stylish emphasis to your words" },
               { icon: Underline, title: "Underline Text Tool", desc: "Highlight key text with underlines" },
-              { icon: StrikethroughSquare, title: "Strikethrough Text Maker", desc: "Cross out words with a single click" },
+              { icon: Strikethrough, title: "Strikethrough Text Maker", desc: "Cross out words with a single click" },
               { icon: Type, title: "Case Converter", desc: "Switch between text cases easily" },
               { icon: Sparkles, title: "Fancy Text Generator", desc: "Create eye-catching, decorative fonts" },
             ].map((tool, index) => (
