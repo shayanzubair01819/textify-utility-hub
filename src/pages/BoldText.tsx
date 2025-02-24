@@ -37,6 +37,13 @@ const BoldText = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Explanatory Text */}
+      <div className="max-w-4xl mx-auto pt-8 px-4 text-center">
+        <p className="text-gray-600 mb-6">
+          Transform your text into bold format with our Bold Text Generator. Perfect for social media posts, blog content, or any text that needs emphasis. Simply type or paste your text below, and our tool will instantly convert it to bold format. You can then copy and paste the bold text anywhere you like – it works on most platforms!
+        </p>
+      </div>
+
       {/* Text Editor Section */}
       <div className="text-editor-section py-8 px-4">
         <TextEditor />
