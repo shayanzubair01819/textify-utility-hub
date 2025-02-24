@@ -79,7 +79,7 @@ const ItalicText = () => {
             {[
               "Type or paste your text into the input box.",
               "The tool will instantly convert it into italicized font styles.",
-              "Click "Copy" to use the italic text anywhere—social media, emails, blog posts, and more!"
+              "Click \"Copy\" to use the italic text anywhere—social media, emails, blog posts, and more!"
             ].map((text, index) => (
               <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
                 <ListOrdered className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
@@ -196,4 +196,3 @@ const ItalicText = () => {
 };
 
 export default ItalicText;
-
