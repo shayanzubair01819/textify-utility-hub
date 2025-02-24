@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Copy, Trash2, RefreshCw } from 'lucide-react';
+import { AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Copy, Trash2, SortAsc, SortDesc, Shuffle, FileText, Download, Upload, Code, FileCode, RefreshCw } from 'lucide-react';
 
 const BOLD_STYLES = {
   sans: "𝗕𝗼𝗹𝗱 𝗦𝗮𝗻𝘀",
@@ -13,12 +12,10 @@ const BOLD_STYLES = {
 };
 
 const convertToBoldStyle = (text: string, style: keyof typeof BOLD_STYLES) => {
-  // This is a simplified version - in a real implementation, you'd have
-  // a comprehensive character mapping for each style
   return text;  // For now, return original text
 };
 
-export const TextEditor = () => {
+export const BoldTextEditor = () => {
   const [text, setText] = useState('');
   const [wordCount, setWordCount] = useState(0);
   const [charCount, setCharCount] = useState(0);
@@ -28,6 +25,10 @@ export const TextEditor = () => {
   const [textColor, setTextColor] = useState('#000000');
   const [backgroundColor, setBackgroundColor] = useState('transparent');
   const [selectedStyle, setSelectedStyle] = useState<keyof typeof BOLD_STYLES>('sans');
+  const [isMarkdownPreview, setIsMarkdownPreview] = useState(false);
+  const [showHTML, setShowHTML] = useState(false);
+  const [markdownHTML, setMarkdownHTML] = useState('');
+  const [convertedHTML, setConvertedHTML] = useState('');
 
   const { toast } = useToast();
 
@@ -123,6 +124,23 @@ export const TextEditor = () => {
     }
   };
 
+  const handleCaseChange = (type: string) => {
+    switch (type) {
+      case 'upper':
+        setText(text.toUpperCase());
+        break;
+      case 'lower':
+        setText(text.toLowerCase());
+        break;
+      case 'title':
+        setText(text.toLowerCase().replace(/(?:^|\s)\w/g, letter => letter.toUpperCase()));
+        break;
+      case 'sentence':
+        setText(text.toLowerCase().replace(/(^\w|\.\s+\w)/g, letter => letter.toUpperCase()));
+        break;
+    }
+  };
+
   const fontFamilies = [
     { label: 'Inter', value: 'Inter' },
     { label: 'Arial', value: 'Arial' },
@@ -133,24 +151,37 @@ export const TextEditor = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 animate-fadeIn">
-      {/* Editor Container */}
-      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
-        {/* Text Area */}
-        <textarea
-          value={text}
-          onChange={handleTextChange}
-          className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans text-sm sm:text-base"
-          placeholder="Enter your text here to convert it to bold..."
-          style={{
-            fontFamily,
-            fontSize,
-            lineHeight,
-            color: textColor,
-            backgroundColor
-          }}
-        />
+      <div className="text-center mb-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">Bold Text Generator</h1>
+        <p className="text-sm sm:text-base text-slate-600">Create Bold Text for Social Media</p>
+      </div>
 
-        {/* Quick stats */}
+      <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
+        {isMarkdownPreview ? (
+          <div
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: markdownHTML }}
+          />
+        ) : showHTML ? (
+          <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
+            <pre className="text-sm font-mono whitespace-pre-wrap">{convertedHTML}</pre>
+          </div>
+        ) : (
+          <textarea
+            value={text}
+            onChange={handleTextChange}
+            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans text-sm sm:text-base"
+            placeholder="Enter or paste your text here to make it bold... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"
+            style={{
+              fontFamily,
+              fontSize,
+              lineHeight,
+              color: textColor,
+              backgroundColor,
+            }}
+          />
+        )}
+
         <div className="flex flex-wrap items-center justify-between text-xs sm:text-sm text-slate-600 gap-2 border-b pb-4">
           <div className="flex flex-wrap gap-2 sm:gap-4">
             <span>{wordCount} words</span>
@@ -162,7 +193,6 @@ export const TextEditor = () => {
           </Button>
         </div>
 
-        {/* Formatting Tools */}
         <div className="flex flex-wrap gap-2 pb-4 border-b overflow-x-auto">
           <div className="flex gap-2">
             <Button variant="outline" size="icon" onClick={() => handleAlignment('left')} className="hover:bg-slate-100">
@@ -199,7 +229,6 @@ export const TextEditor = () => {
           </div>
         </div>
 
-        {/* Font Settings */}
         <div className="flex flex-wrap gap-4 pb-4 border-b">
           <select
             value={fontFamily}
@@ -231,7 +260,6 @@ export const TextEditor = () => {
           </div>
         </div>
 
-        {/* Bold Style Selection */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {Object.entries(BOLD_STYLES).map(([key, label]) => (
             <Button
@@ -245,8 +273,12 @@ export const TextEditor = () => {
           ))}
         </div>
       </div>
+
+      <div className="text-center text-xs sm:text-sm text-slate-500 mt-4">
+        <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + S (Save)</p>
+      </div>
     </div>
   );
 };
 
-export default TextEditor;
+export default BoldTextEditor;
