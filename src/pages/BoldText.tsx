@@ -1,6 +1,6 @@
 
 import React from "react";
-import { TextEditor } from "@/components/BoldTextEditor";
+import { TextEditor } from "@/components/LinkedInTextEditor";
 import { Toaster } from "@/components/ui/toaster";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
