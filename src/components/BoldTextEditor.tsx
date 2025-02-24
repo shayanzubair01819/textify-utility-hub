@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { AlignLeft, AlignCenter, AlignRight, Bold, Italic, Underline, Copy, Trash2, SortAsc, SortDesc, Shuffle, FileText, Download, Upload, Code, FileCode, RefreshCw } from 'lucide-react';
-
 const BOLD_STYLES = {
   sans: "𝗕𝗼𝗹𝗱 𝗦𝗮𝗻𝘀",
   serif: "𝐁𝐨𝐥𝐝 𝐒𝐞𝐫𝐢𝐟",
@@ -10,11 +9,9 @@ const BOLD_STYLES = {
   gothic: "𝖡𝗈𝗅𝖽 𝖦𝗈𝗍𝗁𝗂𝖼",
   mono: "𝙱𝚘𝚕𝚍 𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎"
 };
-
 const convertToBoldStyle = (text: string, style: keyof typeof BOLD_STYLES) => {
-  return text;  // For now, return original text
+  return text; // For now, return original text
 };
-
 export const BoldTextEditor = () => {
   const [text, setText] = useState('');
   const [wordCount, setWordCount] = useState(0);
@@ -29,26 +26,22 @@ export const BoldTextEditor = () => {
   const [showHTML, setShowHTML] = useState(false);
   const [markdownHTML, setMarkdownHTML] = useState('');
   const [convertedHTML, setConvertedHTML] = useState('');
-
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       updateCounts(text);
     }, 300);
-
     return () => clearTimeout(timeoutId);
   }, [text]);
-
   const updateCounts = useCallback((value: string) => {
     setCharCount(value.length);
     setWordCount(value.trim() === '' ? 0 : value.trim().split(/\s+/).length);
   }, []);
-
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   }, []);
-
   const handleCopy = useCallback(async () => {
     try {
       const boldText = convertToBoldStyle(text, selectedStyle);
@@ -65,14 +58,12 @@ export const BoldTextEditor = () => {
       });
     }
   }, [text, selectedStyle, toast]);
-
   const handleAlignment = (alignment: string) => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
       textarea.style.textAlign = alignment;
     }
   };
-
   const handleStyle = (style: string) => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
@@ -89,7 +80,6 @@ export const BoldTextEditor = () => {
       }
     }
   };
-
   const handleFontChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFontFamily(e.target.value);
     const textarea = document.querySelector('textarea');
@@ -97,7 +87,6 @@ export const BoldTextEditor = () => {
       textarea.style.fontFamily = e.target.value;
     }
   };
-
   const clearFormatting = () => {
     const textarea = document.querySelector('textarea');
     if (textarea) {
@@ -110,20 +99,17 @@ export const BoldTextEditor = () => {
       textarea.style.fontStyle = 'normal';
       textarea.style.textDecoration = 'none';
       textarea.style.textAlign = 'left';
-
       setFontFamily('Inter');
       setFontSize('16px');
       setLineHeight('1.5');
       setTextColor('#000000');
       setBackgroundColor('transparent');
-      
       toast({
         title: "Formatting cleared",
         description: "All text formatting has been reset to default."
       });
     }
   };
-
   const handleCaseChange = (type: string) => {
     switch (type) {
       case 'upper':
@@ -140,47 +126,40 @@ export const BoldTextEditor = () => {
         break;
     }
   };
-
-  const fontFamilies = [
-    { label: 'Inter', value: 'Inter' },
-    { label: 'Arial', value: 'Arial' },
-    { label: 'Times New Roman', value: 'Times New Roman' },
-    { label: 'Courier New', value: 'Courier New' },
-    { label: 'Georgia', value: 'Georgia' }
-  ];
-
-  return (
-    <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 animate-fadeIn">
+  const fontFamilies = [{
+    label: 'Inter',
+    value: 'Inter'
+  }, {
+    label: 'Arial',
+    value: 'Arial'
+  }, {
+    label: 'Times New Roman',
+    value: 'Times New Roman'
+  }, {
+    label: 'Courier New',
+    value: 'Courier New'
+  }, {
+    label: 'Georgia',
+    value: 'Georgia'
+  }];
+  return <div className="w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-6 space-y-4 sm:space-y-6 animate-fadeIn">
       <div className="text-center mb-4 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">Bold Text Generator</h1>
-        <p className="text-sm sm:text-base text-slate-600">Create Bold Text for Social Media</p>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-2">Bold Text Generator - Convert Normal Text to Bold Instantly</h1>
+        <p className="text-sm sm:text-base text-slate-600">Make your text bold and attention-grabbing for better readability and impact.</p>
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
-        {isMarkdownPreview ? (
-          <div
-            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: markdownHTML }}
-          />
-        ) : showHTML ? (
-          <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
+        {isMarkdownPreview ? <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto prose prose-sm max-w-none" dangerouslySetInnerHTML={{
+        __html: markdownHTML
+      }} /> : showHTML ? <div className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg bg-slate-50 overflow-auto">
             <pre className="text-sm font-mono whitespace-pre-wrap">{convertedHTML}</pre>
-          </div>
-        ) : (
-          <textarea
-            value={text}
-            onChange={handleTextChange}
-            className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans text-sm sm:text-base"
-            placeholder="Enter or paste your text here to make it bold... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)"
-            style={{
-              fontFamily,
-              fontSize,
-              lineHeight,
-              color: textColor,
-              backgroundColor,
-            }}
-          />
-        )}
+          </div> : <textarea value={text} onChange={handleTextChange} className="w-full min-h-[16rem] max-h-[32rem] p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-200 resize-vertical font-sans text-sm sm:text-base" placeholder="Enter or paste your text here to make it bold... (Ctrl+B for bold, Ctrl+I for italic, Ctrl+S to save)" style={{
+        fontFamily,
+        fontSize,
+        lineHeight,
+        color: textColor,
+        backgroundColor
+      }} />}
 
         <div className="flex flex-wrap items-center justify-between text-xs sm:text-sm text-slate-600 gap-2 border-b pb-4">
           <div className="flex flex-wrap gap-2 sm:gap-4">
@@ -230,55 +209,28 @@ export const BoldTextEditor = () => {
         </div>
 
         <div className="flex flex-wrap gap-4 pb-4 border-b">
-          <select
-            value={fontFamily}
-            onChange={handleFontChange}
-            className="px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            {fontFamilies.map(font => (
-              <option key={font.value} value={font.value}>
+          <select value={fontFamily} onChange={handleFontChange} className="px-2 sm:px-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20">
+            {fontFamilies.map(font => <option key={font.value} value={font.value}>
                 {font.label}
-              </option>
-            ))}
+              </option>)}
           </select>
 
           <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={textColor}
-              onChange={(e) => setTextColor(e.target.value)}
-              className="w-8 h-8 rounded cursor-pointer"
-              title="Text Color"
-            />
-            <input
-              type="color"
-              value={backgroundColor}
-              onChange={(e) => setBackgroundColor(e.target.value)}
-              className="w-8 h-8 rounded cursor-pointer"
-              title="Background Color"
-            />
+            <input type="color" value={textColor} onChange={e => setTextColor(e.target.value)} className="w-8 h-8 rounded cursor-pointer" title="Text Color" />
+            <input type="color" value={backgroundColor} onChange={e => setBackgroundColor(e.target.value)} className="w-8 h-8 rounded cursor-pointer" title="Background Color" />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {Object.entries(BOLD_STYLES).map(([key, label]) => (
-            <Button
-              key={key}
-              variant={selectedStyle === key ? "default" : "outline"}
-              className="w-full"
-              onClick={() => setSelectedStyle(key as keyof typeof BOLD_STYLES)}
-            >
+          {Object.entries(BOLD_STYLES).map(([key, label]) => <Button key={key} variant={selectedStyle === key ? "default" : "outline"} className="w-full" onClick={() => setSelectedStyle(key as keyof typeof BOLD_STYLES)}>
               {label}
-            </Button>
-          ))}
+            </Button>)}
         </div>
       </div>
 
       <div className="text-center text-xs sm:text-sm text-slate-500 mt-4">
         <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + S (Save)</p>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default BoldTextEditor;
