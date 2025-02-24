@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle, ListOrdered, TextItalic, ArrowUp, Sparkles } from "lucide-react";
+import { CheckCircle, ListOrdered, Italic, ArrowUp, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const ItalicText = () => {
@@ -102,7 +102,7 @@ const ItalicText = () => {
               "Emails & Documents – Add a professional touch to your email communication and reports."
             ].map((text, index) => (
               <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
-                <TextItalic className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Italic className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                 <p className="text-slate-700">{text}</p>
               </div>
             ))}
