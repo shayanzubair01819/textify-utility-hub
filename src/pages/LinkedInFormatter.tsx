@@ -1,3 +1,4 @@
+
 import React from "react";
 import { TextEditor } from "@/components/LinkedInTextEditor";
 import { Toaster } from "@/components/ui/toaster";
@@ -118,7 +119,7 @@ const LinkedInFormatter = () => {
             {[
               "Enter Your Text – Type or paste your content into the input box.",
               "Apply Formatting – Select bold, italics, underline, or special styles.",
-              "Copy & Use – Click "Copy" and paste it directly into LinkedIn.",
+              "Copy & Use – Click 'Copy' and paste it directly into LinkedIn."
             ].map((text, index) => (
               <div
                 key={index}
@@ -142,7 +143,7 @@ const LinkedInFormatter = () => {
               "Comments & Replies – Emphasize important insights in discussions.",
               "Profile Headlines – Make your profile stand out with formatted text.",
               "Direct Messages (DMs) – Grab attention with bold & stylish text.",
-              "Company Announcements – Format corporate updates for clarity.",
+              "Company Announcements – Format corporate updates for clarity."
             ].map((text, index) => (
               <div
                 key={index}
@@ -166,7 +167,7 @@ const LinkedInFormatter = () => {
               "One-Click Copy to Clipboard",
               "No Logins, No Downloads – 100% Free",
               "Works on Desktop & Mobile",
-              "Perfect for LinkedIn, Facebook, Twitter & More",
+              "Perfect for LinkedIn, Facebook, Twitter & More"
             ].map((feature, index) => (
               <Card
                 key={index}
@@ -196,20 +197,20 @@ const LinkedInFormatter = () => {
             {[
               {
                 q: "Is this LinkedIn Text Formatter free to use?",
-                a: "Yes! This tool is 100% free with no sign-ups or downloads required.",
+                a: "Yes! This tool is 100% free with no sign-ups or downloads required."
               },
               {
                 q: "Will the formatted text work on LinkedIn?",
-                a: "Yes! The text styles are supported by LinkedIn and appear correctly in posts, comments, and messages.",
+                a: "Yes! The text styles are supported by LinkedIn and appear correctly in posts, comments, and messages."
               },
               {
                 q: "Can I use this for other social media platforms?",
-                a: "Absolutely! You can copy the formatted text and use it on Facebook, Instagram, Twitter, and more.",
+                a: "Absolutely! You can copy the formatted text and use it on Facebook, Instagram, Twitter, and more."
               },
               {
                 q: "Does this work on mobile devices?",
-                a: "Yes! The tool is fully responsive and works on both desktop and mobile devices.",
-              },
+                a: "Yes! The tool is fully responsive and works on both desktop and mobile devices."
+              }
             ].map((faq, index) => (
               <AccordionItem
                 key={index}
