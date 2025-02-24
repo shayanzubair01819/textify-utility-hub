@@ -1,4 +1,3 @@
-
 import React from "react";
 import { TextEditor } from "@/components/LinkedInTextEditor";
 import { Toaster } from "@/components/ui/toaster";
@@ -97,7 +96,7 @@ const LinkedInFormatter = () => {
               "Make Posts Stand Out – Professionally formatted text attracts more views.",
               "Enhance Readability – Use clear formatting for better communication.",
               "No Extra Effort Needed – Format text in seconds without coding.",
-              "100% Free & Online – No sign-ups, no downloads—just quick and easy formatting.",
+              "100% Free & Online – No sign-ups, no downloads—just quick and easy formatting."
             ].map((text, index) => (
               <div
                 key={index}
@@ -262,4 +261,3 @@ const LinkedInFormatter = () => {
 };
 
 export default LinkedInFormatter;
-
