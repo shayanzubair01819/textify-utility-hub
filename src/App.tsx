@@ -10,6 +10,7 @@ import LinkedInFormatter from "./pages/LinkedInFormatter";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Blog from "./pages/Blog";
 import Navigation from "./components/Navigation";
 import { Footer } from "./components/Footer";
 
@@ -31,6 +32,7 @@ function App() {
                   <Route path="/linkedin-formatter" element={<LinkedInFormatter />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/blog" element={<Blog />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
