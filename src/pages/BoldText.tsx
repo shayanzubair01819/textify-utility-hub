@@ -1,4 +1,3 @@
-
 import React from "react";
 import { TextEditor } from "@/components/LinkedInTextEditor";
 import { Toaster } from "@/components/ui/toaster";
@@ -7,17 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ListOrdered, ArrowUp, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
-
 const BoldText = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   };
-
   const scrollToEditor = () => {
     const editorElement = document.querySelector(".text-editor-section");
     if (editorElement) {
@@ -26,7 +22,6 @@ const BoldText = () => {
       });
     }
   };
-
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 500);
@@ -34,18 +29,9 @@ const BoldText = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  return (
-    <div className="min-h-screen bg-slate-50">
+  return <div className="min-h-screen bg-slate-50">
       {/* Header Section */}
-      <div className="text-center pt-8 pb-4 px-4">
-        <h1 className="text-4xl sm:text-5xl font-medium text-slate-700 mb-4">
-          Bold Text Generator – Style & Format Text for Social Media
-        </h1>
-        <p className="text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto">
-          Easily Format, Style & Create Bold Text with One Click
-        </p>
-      </div>
+      
 
       {/* Text Editor Section */}
       <div className="text-editor-section py-8 px-4">
@@ -77,18 +63,10 @@ const BoldText = () => {
             Why Use Bold Text?
           </h2>
           <div className="grid gap-4">
-            {[
-              "Highlight Important Words – Emphasize key points in your writing.",
-              "Improve Readability – Make content easier to scan and understand.",
-              "Boost Engagement – Attract attention on social media platforms.",
-              "SEO Benefits – Enhance on-page SEO with better content structure.",
-              "Better UX (User Experience) – Help users find important information quickly."
-            ].map((text, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+            {["Highlight Important Words – Emphasize key points in your writing.", "Improve Readability – Make content easier to scan and understand.", "Boost Engagement – Attract attention on social media platforms.", "SEO Benefits – Enhance on-page SEO with better content structure.", "Better UX (User Experience) – Help users find important information quickly."].map((text, index) => <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
                 <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                 <p className="text-slate-700">{text}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </section>
 
@@ -98,16 +76,10 @@ const BoldText = () => {
             How to Use Our Bold Text Generator?
           </h2>
           <div className="grid gap-4">
-            {[
-              "Enter your text into the input box.",
-              "Select a bold text style from the generated options.",
-              "Copy the bold text and paste it anywhere!"
-            ].map((text, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+            {["Enter your text into the input box.", "Select a bold text style from the generated options.", "Copy the bold text and paste it anywhere!"].map((text, index) => <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
                 <ListOrdered className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
                 <p className="text-slate-700">{text}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
           <p className="mt-4 text-center text-blue-600 font-medium">
             🚀 No software or downloads required! Works on all devices.
@@ -120,18 +92,10 @@ const BoldText = () => {
             Where Can You Use Bold Text?
           </h2>
           <div className="grid gap-4">
-            {[
-              "Social Media Posts: Make captions & comments stand out",
-              "Chat & Messaging Apps: Emphasize important messages",
-              "Blog & Article Writing: Highlight key points",
-              "Emails & Marketing Copy: Catch readers' attention",
-              "Website Content & UI Design: Improve readability & SEO"
-            ].map((text, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+            {["Social Media Posts: Make captions & comments stand out", "Chat & Messaging Apps: Emphasize important messages", "Blog & Article Writing: Highlight key points", "Emails & Marketing Copy: Catch readers' attention", "Website Content & UI Design: Improve readability & SEO"].map((text, index) => <div key={index} className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
                 <CheckCircle className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                 <p className="text-slate-700">{text}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </section>
 
@@ -141,18 +105,10 @@ const BoldText = () => {
             Types of Bold Text Styles We Generate
           </h2>
           <div className="grid sm:grid-cols-2 gap-4">
-            {[
-              "𝗕𝗼𝗹𝗱 𝗦𝗮𝗻𝘀 (Bold Sans-Serif)",
-              "𝐁𝐨𝐥𝐝 𝐒𝐞𝐫𝐢𝐟 (Bold Serif)",
-              "𝑩𝒐𝒍𝒅 𝑰𝒕𝒂𝒍𝒊𝒄 (Bold Italic)",
-              "𝖡𝗈𝗅𝖽 𝖦𝗈𝗍𝗁𝗂𝖼 (Bold Gothic Font)",
-              "𝙱𝚘𝚕𝚍 𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎 (Bold Monospace)"
-            ].map((feature, index) => (
-              <Card key={index} className="p-4 flex items-start gap-3 bg-white hover:shadow-md transition-shadow">
+            {["𝗕𝗼𝗹𝗱 𝗦𝗮𝗻𝘀 (Bold Sans-Serif)", "𝐁𝐨𝐥𝐝 𝐒𝐞𝐫𝐢𝐟 (Bold Serif)", "𝑩𝒐𝒍𝒅 𝑰𝒕𝒂𝒍𝒊𝒄 (Bold Italic)", "𝖡𝗈𝗅𝖽 𝖦𝗈𝗍𝗁𝗂𝖼 (Bold Gothic Font)", "𝙱𝚘𝚕𝚍 𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎 (Bold Monospace)"].map((feature, index) => <Card key={index} className="p-4 flex items-start gap-3 bg-white hover:shadow-md transition-shadow">
                 <Sparkles className="h-5 w-5 text-yellow-500 mt-0.5 flex-shrink-0" />
                 <p className="text-slate-700">{feature}</p>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </section>
 
@@ -170,33 +126,26 @@ const BoldText = () => {
             Frequently Asked Questions
           </h2>
           <Accordion type="single" collapsible className="w-full space-y-4">
-            {[
-              {
-                q: "Is this Bold Text Generator free to use?",
-                a: "Yes! Our Bold Text Generator is completely free with no sign-ups required."
-              },
-              {
-                q: "Will the bold text work everywhere?",
-                a: "The bold text works on most platforms including social media, messaging apps, and websites. Some platforms might have limitations on certain styles."
-              },
-              {
-                q: "Can I use this on my phone?",
-                a: "Yes! The Bold Text Generator is fully responsive and works perfectly on mobile devices."
-              },
-              {
-                q: "How many bold styles can I generate?",
-                a: "We offer multiple bold text styles including Sans-Serif, Serif, Italic, Gothic, and Monospace variations."
-              }
-            ].map((faq, index) => (
-              <AccordionItem key={index} value={`faq-${index}`} className="bg-white rounded-lg shadow-sm px-4">
+            {[{
+            q: "Is this Bold Text Generator free to use?",
+            a: "Yes! Our Bold Text Generator is completely free with no sign-ups required."
+          }, {
+            q: "Will the bold text work everywhere?",
+            a: "The bold text works on most platforms including social media, messaging apps, and websites. Some platforms might have limitations on certain styles."
+          }, {
+            q: "Can I use this on my phone?",
+            a: "Yes! The Bold Text Generator is fully responsive and works perfectly on mobile devices."
+          }, {
+            q: "How many bold styles can I generate?",
+            a: "We offer multiple bold text styles including Sans-Serif, Serif, Italic, Gothic, and Monospace variations."
+          }].map((faq, index) => <AccordionItem key={index} value={`faq-${index}`} className="bg-white rounded-lg shadow-sm px-4">
                 <AccordionTrigger className="text-left font-medium">
                   {faq.q}
                 </AccordionTrigger>
                 <AccordionContent className="text-slate-600">
                   {faq.a}
                 </AccordionContent>
-              </AccordionItem>
-            ))}
+              </AccordionItem>)}
           </Accordion>
         </section>
 
@@ -216,17 +165,9 @@ const BoldText = () => {
       </div>
 
       {/* Sticky scroll to top button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors"
-          aria-label="Scroll to top"
-        >
+      {showScrollTop && <button onClick={scrollToTop} className="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors" aria-label="Scroll to top">
           <ArrowUp className="h-6 w-6" />
-        </button>
-      )}
-    </div>
-  );
+        </button>}
+    </div>;
 };
-
 export default BoldText;
