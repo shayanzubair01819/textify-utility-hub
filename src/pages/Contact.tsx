@@ -1,23 +1,23 @@
 
-import React from "react"
-import { Mail, MapPin, Globe, MessageSquare } from "lucide-react"
+import React from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { ContactForm } from "@/components/contact/ContactForm"
-import { FAQ } from "@/components/contact/FAQ"
-import { SocialLinks } from "@/components/contact/SocialLinks"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/card";
+import { ContactForm } from "@/components/contact/ContactForm";
+import { FAQ } from "@/components/contact/FAQ";
+import { SocialLinks } from "@/components/contact/SocialLinks";
+import { Button } from "@/components/ui/button";
+import { Mail, MessageSquare, Globe } from "lucide-react";
 
 const Contact = () => {
   const scrollToForm = () => {
-    const formElement = document.getElementById("contact-form")
-    formElement?.scrollIntoView({ behavior: "smooth" })
-  }
+    const formElement = document.getElementById("contact-form");
+    formElement?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-12 max-w-7xl">
@@ -29,11 +29,7 @@ const Contact = () => {
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Have questions, feedback, or suggestions? We'd love to hear from you!
         </p>
-        <Button
-          onClick={scrollToForm}
-          size="lg"
-          className="mt-4"
-        >
+        <Button onClick={scrollToForm} size="lg" className="mt-4">
           Send a Message
         </Button>
       </section>
@@ -122,7 +118,7 @@ const Contact = () => {
         </Button>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;
