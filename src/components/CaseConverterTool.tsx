@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,14 +70,14 @@ const CaseConverterTool = () => {
         // Split by sentence-ending punctuation followed by space
         result = text.toLowerCase().replace(
           /(^\s*|[.!?]\s+)([a-z])/g,
-          (match, p1, p2) => p1 + p2.toUpperCase()
+          (match: string, p1: string, p2: string) => p1 + p2.toUpperCase()
         );
         break;
       case "titlecase":
         // Capitalize first letter of each word, keeping exceptions in mind
         result = text.toLowerCase().replace(
           /\b(\w)/g,
-          (match) => match.toUpperCase()
+          (match: string) => match.toUpperCase()
         );
         break;
       case "alternatingcase":
@@ -99,7 +100,7 @@ const CaseConverterTool = () => {
         // Ensure the first letter of every sentence is capitalized
         result = text.replace(
           /(^\s*|[.!?]\s+)([a-z])/g,
-          (match, p1, p2) => p1 + p2.toUpperCase()
+          (match: string, p1: string, p2: string) => p1 + p2.toUpperCase()
         );
         break;
       case "firstlettercapitalization":
