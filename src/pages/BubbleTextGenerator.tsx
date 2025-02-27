@@ -32,6 +32,18 @@ const BubbleTextGenerator = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Header Section */}
+      <div className="w-full bg-white border-b border-slate-200">
+        <div className="max-w-4xl mx-auto py-12 px-4 text-center">
+          <h1 className="text-3xl font-bold text-slate-700 mb-4">
+            Bubble Text Generator - Create Stylish Circle Text Online
+          </h1>
+          <p className="text-slate-600 max-w-2xl mx-auto">
+            Transform your regular text into fun bubble letters and circular characters instantly. Perfect for social media, usernames, and creative text styling!
+          </p>
+        </div>
+      </div>
+
       {/* Text Editor Section */}
       <div className="text-editor-section py-8 px-4">
         <BubbleTextGeneratorTool />
