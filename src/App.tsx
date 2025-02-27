@@ -12,6 +12,7 @@ import ItalicText from "./pages/ItalicText";
 import UnderlineText from "./pages/UnderlineText";
 import BigTextConverter from "./pages/BigTextConverter";
 import CaseConverter from "./pages/CaseConverter";
+import BubbleTextGenerator from "./pages/BubbleTextGenerator";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/online-text-underliner" element={<UnderlineText />} />
                   <Route path="/big-text-converter" element={<BigTextConverter />} />
                   <Route path="/case-converter" element={<CaseConverter />} />
+                  <Route path="/bubble-text-generator" element={<BubbleTextGenerator />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/blog" element={<Blog />} />
