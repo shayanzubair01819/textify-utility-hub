@@ -45,7 +45,8 @@ const Navigation = () => {
                   isActive("/bold-text") || 
                   isActive("/italic-text") || 
                   isActive("/online-text-underliner") ||
-                  isActive("/big-text-converter") && "bg-accent/50"
+                  isActive("/big-text-converter") ||
+                  isActive("/case-converter") && "bg-accent/50"
                 )}>Text Formatting Tools</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
@@ -110,6 +111,19 @@ const Navigation = () => {
                           <div className="text-sm font-medium leading-none">Big Text Converter</div>
                           <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
                             Convert text to various large font styles
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/case-converter">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/case-converter") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Case Converter</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Convert text to uppercase, lowercase, title case & more
                           </p>
                         </NavigationMenuLink>
                       </Link>
@@ -181,6 +195,7 @@ const Navigation = () => {
                     <Link to="/italic-text" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/italic-text") && "bg-accent")}>Italic Text Generator</Link>
                     <Link to="/online-text-underliner" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/online-text-underliner") && "bg-accent")}>Underline Text Generator</Link>
                     <Link to="/big-text-converter" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/big-text-converter") && "bg-accent")}>Big Text Converter</Link>
+                    <Link to="/case-converter" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/case-converter") && "bg-accent")}>Case Converter</Link>
                   </div>
                 </div>
                 
