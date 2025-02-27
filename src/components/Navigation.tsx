@@ -1,176 +1,212 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Menu, X, ChevronDown, Type, Bold, Italic, Underline, AlignJustify, Shuffle, Circle } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { ChevronDown, Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
+  
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
-    { name: 'Blog', path: '/blog' },
-  ];
-
-  const textFormattingTools = [
-    { name: 'Bold Text Generator', path: '/bold-text', icon: <Bold className="h-4 w-4 mr-2" /> },
-    { name: 'Italic Text Generator', path: '/italic-text', icon: <Italic className="h-4 w-4 mr-2" /> },
-    { name: 'Underline Text Generator', path: '/underline-text', icon: <Underline className="h-4 w-4 mr-2" /> },
-    { name: 'LinkedIn Formatter', path: '/linkedin-formatter', icon: <AlignJustify className="h-4 w-4 mr-2" /> },
-    { name: 'Case Converter', path: '/case-converter', icon: <Shuffle className="h-4 w-4 mr-2" /> },
-    { name: 'Big Text Converter', path: '/big-text-converter', icon: <Type className="h-4 w-4 mr-2" /> },
-    { name: 'Bubble Text Generator', path: '/bubble-text', icon: <Circle className="h-4 w-4 mr-2" /> },
-  ];
-
   return (
-    <header 
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ease-in-out ${
-        scrolled 
-          ? 'bg-white/95 backdrop-blur-sm shadow-md' 
-          : 'bg-white shadow-sm'
-      }`}
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link 
-              to="/" 
-              className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent"
-            >
-              Text Tweaker
-            </Link>
-          </div>
-          
-          {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  isActive(link.path) 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center ml-1 rounded-md">
-                  <Type className="h-4 w-4 mr-2" />
-                  Text Tools
-                  <ChevronDown className="h-4 w-4 ml-1 opacity-70" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-60 p-2">
-                {textFormattingTools.map((tool) => (
-                  <DropdownMenuItem key={tool.path} asChild className="rounded-md">
-                    <Link 
-                      to={tool.path}
-                      className={`flex items-center w-full px-3 py-2 text-sm ${
-                        isActive(tool.path) 
-                          ? 'bg-blue-50 text-blue-600 font-medium' 
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      {tool.icon}
-                      {tool.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </nav>
-          
-          {/* Mobile Menu Button */}
-          <button
-            onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
-            aria-expanded={isMenuOpen}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 flex">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
+            <span className="font-bold">Text Tweaker</span>
+          </Link>
+        </div>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex md:flex-1">
+          <NavigationMenu className="mx-6">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link to="/">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/") && "bg-accent/50"
+                  )}>
+                    Home
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className={cn(
+                  isActive("/linkedin-formatter") || 
+                  isActive("/bold-text") || 
+                  isActive("/italic-text") || 
+                  isActive("/online-text-underliner") ||
+                  isActive("/big-text-converter") ||
+                  isActive("/case-converter") && "bg-accent/50"
+                )}>Text Formatting Tools</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    <li>
+                      <Link to="/linkedin-formatter">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/linkedin-formatter") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">LinkedIn Formatter</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Format your LinkedIn posts with advanced tools
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/bold-text">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/bold-text") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Bold Text Generator</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Create bold text for social media and more
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/italic-text">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/italic-text") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Italic Text Generator</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Create italic text for your content
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/online-text-underliner">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/online-text-underliner") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Underline Text Generator</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Create underlined text easily
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/big-text-converter">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/big-text-converter") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Big Text Converter</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Convert text to various large font styles
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/case-converter">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/case-converter") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Case Converter</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Convert text to uppercase, lowercase, title case & more
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link to="/about">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/about") && "bg-accent/50"
+                  )}>
+                    About
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link to="/contact">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/contact") && "bg-accent/50"
+                  )}>
+                    Contact
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <Link to="/blog">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/blog") && "bg-accent/50"
+                  )}>
+                    Blog
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="flex md:hidden flex-1 justify-end">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="shrink-0">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[80%] flex flex-col">
+              <SheetHeader>
+                <SheetTitle className="text-left">Menu</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col space-y-2 mt-4">
+                <Link to="/" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/") && "bg-accent")}>Home</Link>
+                
+                <div className="py-2 px-4 space-y-1">
+                  <div className="flex items-center justify-between cursor-pointer group mb-2">
+                    <span className="font-medium">Text Formatting Tools</span>
+                    <ChevronDown className="h-4 w-4 group-data-[state=open]:rotate-180 transition-transform" />
+                  </div>
+                  <div className="ml-4 flex flex-col space-y-2">
+                    <Link to="/linkedin-formatter" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/linkedin-formatter") && "bg-accent")}>LinkedIn Formatter</Link>
+                    <Link to="/bold-text" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/bold-text") && "bg-accent")}>Bold Text Generator</Link>
+                    <Link to="/italic-text" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/italic-text") && "bg-accent")}>Italic Text Generator</Link>
+                    <Link to="/online-text-underliner" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/online-text-underliner") && "bg-accent")}>Underline Text Generator</Link>
+                    <Link to="/big-text-converter" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/big-text-converter") && "bg-accent")}>Big Text Converter</Link>
+                    <Link to="/case-converter" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/case-converter") && "bg-accent")}>Case Converter</Link>
+                  </div>
+                </div>
+                
+                <Link to="/about" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/about") && "bg-accent")}>About</Link>
+                <Link to="/contact" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/contact") && "bg-accent")}>Contact</Link>
+                <Link to="/blog" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/blog") && "bg-accent")}>Blog</Link>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-      
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t py-2 shadow-lg animate-fade-in">
-          <div className="container mx-auto px-4 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`block px-3 py-2 rounded-md text-sm font-medium ${
-                  isActive(link.path) 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            <div className="py-2">
-              <div className="font-medium text-sm px-3 py-2 text-gray-500">Text Formatting Tools</div>
-              <div className="space-y-1 pl-3">
-                {textFormattingTools.map((tool) => (
-                  <Link
-                    key={tool.path}
-                    to={tool.path}
-                    className={`flex items-center px-3 py-2 rounded-md text-sm ${
-                      isActive(tool.path) 
-                        ? 'text-blue-600 bg-blue-50 font-medium' 
-                        : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {tool.icon}
-                    {tool.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

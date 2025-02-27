@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +50,7 @@ const CaseConverterTool = () => {
     });
   }, [inputText]);
 
-  const convertText = (text: string, conversionType: string) => {
+  const convertText = (text, conversionType) => {
     if (!text) {
       setOutputText("");
       return;
@@ -83,7 +82,7 @@ const CaseConverterTool = () => {
       case "alternatingcase":
         // Alternate between uppercase and lowercase
         result = Array.from(text)
-          .map((char: string, index) => 
+          .map((char, index) => 
             index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
           )
           .join("");
@@ -91,7 +90,7 @@ const CaseConverterTool = () => {
       case "togglecase":
         // Swap case of each character
         result = Array.from(text)
-          .map((char: string) => 
+          .map(char => 
             char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()
           )
           .join("");
