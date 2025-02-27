@@ -51,7 +51,7 @@ const CaseConverterTool = () => {
     });
   }, [inputText]);
 
-  const convertText = (text, conversionType) => {
+  const convertText = (text: string, conversionType: string) => {
     if (!text) {
       setOutputText("");
       return;
@@ -91,7 +91,7 @@ const CaseConverterTool = () => {
       case "togglecase":
         // Swap case of each character
         result = Array.from(text)
-          .map(char => 
+          .map((char) => 
             char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase()
           )
           .join("");
