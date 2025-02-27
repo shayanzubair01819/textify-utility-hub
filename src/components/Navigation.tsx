@@ -44,7 +44,7 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-gray-800">TextMaster</Link>
+            <Link to="/" className="text-xl font-bold text-gray-800">Text Tweaker</Link>
           </div>
           
           {/* Desktop Menu */}
