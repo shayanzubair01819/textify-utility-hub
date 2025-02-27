@@ -52,6 +52,11 @@ export function Footer() {
                   Underline Text Tool
                 </Link>
               </li>
+              <li>
+                <Link to="/big-text-converter" className="text-gray-400 hover:text-white transition-colors">
+                  Big Text Converter
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="space-y-4">

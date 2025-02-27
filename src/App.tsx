@@ -10,6 +10,7 @@ import LinkedInFormatter from "./pages/LinkedInFormatter";
 import BoldText from "./pages/BoldText";
 import ItalicText from "./pages/ItalicText";
 import UnderlineText from "./pages/UnderlineText";
+import BigTextConverter from "./pages/BigTextConverter";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -36,6 +37,7 @@ function App() {
                   <Route path="/bold-text" element={<BoldText />} />
                   <Route path="/italic-text" element={<ItalicText />} />
                   <Route path="/online-text-underliner" element={<UnderlineText />} />
+                  <Route path="/big-text-converter" element={<BigTextConverter />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/blog" element={<Blog />} />
