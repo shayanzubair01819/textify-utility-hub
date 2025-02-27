@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,22 @@ import { Menu, X, ChevronDown, Type, Bold, Italic, Underline, AlignJustify, Shuf
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -40,21 +55,34 @@ const Navigation = () => {
   ];
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header 
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ease-in-out ${
+        scrolled 
+          ? 'bg-white/95 backdrop-blur-sm shadow-md' 
+          : 'bg-white shadow-sm'
+      }`}
+    >
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold text-gray-800">Text Tweaker</Link>
+            <Link 
+              to="/" 
+              className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent"
+            >
+              Text Tweaker
+            </Link>
           </div>
           
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center space-x-4">
+          <nav className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive(link.path) ? 'text-blue-600' : 'text-gray-600'
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive(link.path) 
+                    ? 'text-blue-600 bg-blue-50' 
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
                 }`}
               >
                 {link.name}
@@ -63,19 +91,21 @@ const Navigation = () => {
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center">
+                <Button variant="ghost" className="flex items-center ml-1 rounded-md">
                   <Type className="h-4 w-4 mr-2" />
-                  Text Formatting Tools
-                  <ChevronDown className="h-4 w-4 ml-1" />
+                  Text Tools
+                  <ChevronDown className="h-4 w-4 ml-1 opacity-70" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-60">
+              <DropdownMenuContent align="end" className="w-60 p-2">
                 {textFormattingTools.map((tool) => (
-                  <DropdownMenuItem key={tool.path} asChild>
+                  <DropdownMenuItem key={tool.path} asChild className="rounded-md">
                     <Link 
                       to={tool.path}
-                      className={`flex items-center w-full px-2 py-1.5 ${
-                        isActive(tool.path) ? 'bg-blue-50 text-blue-600' : ''
+                      className={`flex items-center w-full px-3 py-2 text-sm ${
+                        isActive(tool.path) 
+                          ? 'bg-blue-50 text-blue-600 font-medium' 
+                          : 'text-gray-700 hover:bg-gray-50'
                       }`}
                     >
                       {tool.icon}
@@ -90,7 +120,9 @@ const Navigation = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+            className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            aria-expanded={isMenuOpen}
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -99,14 +131,16 @@ const Navigation = () => {
       
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t py-2">
-          <div className="container mx-auto px-4 space-y-2">
+        <div className="md:hidden bg-white border-t py-2 shadow-lg animate-fade-in">
+          <div className="container mx-auto px-4 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`block py-2 text-sm font-medium ${
-                  isActive(link.path) ? 'text-blue-600' : 'text-gray-600'
+                className={`block px-3 py-2 rounded-md text-sm font-medium ${
+                  isActive(link.path) 
+                    ? 'text-blue-600 bg-blue-50' 
+                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -115,14 +149,16 @@ const Navigation = () => {
             ))}
             
             <div className="py-2">
-              <div className="font-medium text-sm py-2 text-gray-500">Text Formatting Tools</div>
-              <div className="space-y-2 pl-2">
+              <div className="font-medium text-sm px-3 py-2 text-gray-500">Text Formatting Tools</div>
+              <div className="space-y-1 pl-3">
                 {textFormattingTools.map((tool) => (
                   <Link
                     key={tool.path}
                     to={tool.path}
-                    className={`flex items-center py-1.5 text-sm ${
-                      isActive(tool.path) ? 'text-blue-600' : 'text-gray-600'
+                    className={`flex items-center px-3 py-2 rounded-md text-sm ${
+                      isActive(tool.path) 
+                        ? 'text-blue-600 bg-blue-50 font-medium' 
+                        : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
