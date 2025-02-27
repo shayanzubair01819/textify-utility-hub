@@ -38,17 +38,17 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                <Link to="/bold-text" className="text-gray-400 hover:text-white transition-colors">
                   Bold Text Generator
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                <Link to="/italic-text" className="text-gray-400 hover:text-white transition-colors">
                   Italic Text Maker
                 </Link>
               </li>
               <li>
-                <Link to="#" className="text-gray-400 hover:text-white transition-colors">
+                <Link to="/online-text-underliner" className="text-gray-400 hover:text-white transition-colors">
                   Underline Text Tool
                 </Link>
               </li>

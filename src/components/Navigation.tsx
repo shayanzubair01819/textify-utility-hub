@@ -1,257 +1,174 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Menu,
-  Search,
-  X,
-  Type,
-  Wand2,
-  FileText,
-  ScrollText,
-  Home,
-  AlignLeft,
-  Mail,
-  HelpCircle,
-  BookOpen,
-} from "lucide-react";
-
-const toolsCategories = [
-  {
-    title: "Basic Formatting",
-    tools: [
-      { name: "Bold Text", path: "/bold-text" },
-      { name: "Italic Text", path: "/italic-text" },
-      { name: "Underline Text", path: "/underline-text" },
-      { name: "Strikethrough Text", path: "/strikethrough-text" },
-    ],
-    icon: Type,
-  },
-  {
-    title: "Case Converters",
-    tools: [
-      { name: "Uppercase Text", path: "/uppercase-text" },
-      { name: "Lowercase Text", path: "/lowercase-text" },
-      { name: "Title Case", path: "/title-case" },
-    ],
-    icon: AlignLeft,
-  },
-  {
-    title: "Fancy & Decorative",
-    tools: [
-      { name: "Fancy Text", path: "/fancy-text" },
-      { name: "Zalgo Text", path: "/zalgo-text" },
-      { name: "Bubble Text", path: "/bubble-text" },
-    ],
-    icon: Wand2,
-  },
-  {
-    title: "Text Utilities",
-    tools: [
-      { name: "Word Counter", path: "/word-counter" },
-      { name: "Remove Spaces", path: "/remove-spaces" },
-      { name: "Line Break Remover", path: "/line-break-remover" },
-    ],
-    icon: FileText,
-  },
-];
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { ChevronDown, Menu } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
   const location = useLocation();
-
-  const isActive = (path: string) => location.pathname === path;
+  
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center px-4">
-        {/* Logo & Brand */}
-        <Link to="/" className="mr-6 flex items-center space-x-2">
-          <ScrollText className="h-6 w-6" />
-          <span className="hidden font-bold sm:inline-block">Text Tweaker</span>
-        </Link>
+      <div className="container flex h-14 items-center">
+        <div className="mr-4 flex">
+          <Link to="/" className="mr-6 flex items-center space-x-2">
+            <span className="font-bold">Text Tweaker</span>
+          </Link>
+        </div>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex md:flex-1">
-          <NavigationMenu>
+          <NavigationMenu className="mx-6">
             <NavigationMenuList>
               <NavigationMenuItem>
-                <Link to="/" className={`px-4 py-2 text-sm font-medium ${isActive("/") ? "text-primary" : "text-muted-foreground"}`}>
-                  Home
+                <Link to="/">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/") && "bg-accent/50"
+                  )}>
+                    Home
+                  </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
+                <NavigationMenuTrigger className={cn(
+                  isActive("/linkedin-formatter") && "bg-accent/50"
+                )}>Text Formatting Tools</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[600px] gap-3 p-4 md:grid-cols-2">
-                    {toolsCategories.map((category) => (
-                      <div key={category.title} className="space-y-2">
-                        <div className="flex items-center gap-2 font-medium">
-                          <category.icon className="h-4 w-4" />
-                          {category.title}
-                        </div>
-                        <div className="space-y-1">
-                          {category.tools.map((tool) => (
-                            <Link
-                              key={tool.path}
-                              to={tool.path}
-                              className="block rounded-md p-2 text-sm hover:bg-accent hover:text-accent-foreground"
-                            >
-                              {tool.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                    <li>
+                      <Link to="/linkedin-formatter">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/linkedin-formatter") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">LinkedIn Formatter</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Format your LinkedIn posts with advanced tools
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/bold-text">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/bold-text") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Bold Text Generator</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Create bold text for social media and more
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/italic-text">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/italic-text") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Italic Text Generator</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Create italic text for your content
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/online-text-underliner">
+                        <NavigationMenuLink className={cn(
+                          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                          isActive("/online-text-underliner") && "bg-accent"
+                        )}>
+                          <div className="text-sm font-medium leading-none">Underline Text Generator</div>
+                          <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+                            Create underlined text easily
+                          </p>
+                        </NavigationMenuLink>
+                      </Link>
+                    </li>
+                  </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
+
               <NavigationMenuItem>
-                <Link to="/blog" className={`px-4 py-2 text-sm font-medium ${isActive("/blog") ? "text-primary" : "text-muted-foreground"}`}>
-                  Blog
+                <Link to="/about">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/about") && "bg-accent/50"
+                  )}>
+                    About
+                  </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+
               <NavigationMenuItem>
-                <Link to="/about" className={`px-4 py-2 text-sm font-medium ${isActive("/about") ? "text-primary" : "text-muted-foreground"}`}>
-                  About
+                <Link to="/contact">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/contact") && "bg-accent/50"
+                  )}>
+                    Contact
+                  </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
+
               <NavigationMenuItem>
-                <Link to="/contact" className={`px-4 py-2 text-sm font-medium ${isActive("/contact") ? "text-primary" : "text-muted-foreground"}`}>
-                  Contact
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link to="/faqs" className={`px-4 py-2 text-sm font-medium ${isActive("/faqs") ? "text-primary" : "text-muted-foreground"}`}>
-                  FAQs
+                <Link to="/blog">
+                  <NavigationMenuLink className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    isActive("/blog") && "bg-accent/50"
+                  )}>
+                    Blog
+                  </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
 
-        {/* Search & CTA */}
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <div className="relative hidden w-48 lg:block">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search tools..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8"
-            />
-          </div>
-          <Link to="/tools">
-            <Button variant="secondary" size="sm" className="hidden sm:inline-flex">
-              Start Tweaking
-            </Button>
-          </Link>
-
-          {/* Mobile Menu Trigger */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        {/* Mobile Navigation */}
+        <div className="flex md:hidden flex-1 justify-end">
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button variant="outline" size="icon" className="shrink-0">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] px-0 py-8">
-              <div className="flex flex-col space-y-4 px-6">
-                <Link to="/" className="flex items-center space-x-2" onClick={() => setIsOpen(false)}>
-                  <Home className="h-5 w-5" />
-                  <span>Home</span>
-                </Link>
-                <div className="space-y-4">
-                  {toolsCategories.map((category) => (
-                    <div key={category.title} className="space-y-2">
-                      <div className="font-medium flex items-center gap-2">
-                        <category.icon className="h-4 w-4" />
-                        {category.title}
-                      </div>
-                      <div className="ml-6 space-y-1">
-                        {category.tools.map((tool) => (
-                          <Link
-                            key={tool.path}
-                            to={tool.path}
-                            className="block py-1 text-sm text-muted-foreground hover:text-primary"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {tool.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="space-y-2">
-                  <Link
-                    to="/blog"
-                    className="flex items-center space-x-2 py-1"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <BookOpen className="h-5 w-5" />
-                    <span>Blog</span>
-                  </Link>
-                  <Link
-                    to="/about"
-                    className="flex items-center space-x-2 py-1"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <FileText className="h-5 w-5" />
-                    <span>About</span>
-                  </Link>
-                  <Link
-                    to="/contact"
-                    className="flex items-center space-x-2 py-1"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Mail className="h-5 w-5" />
-                    <span>Contact</span>
-                  </Link>
-                  <Link
-                    to="/faqs"
-                    className="flex items-center space-x-2 py-1"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <HelpCircle className="h-5 w-5" />
-                    <span>FAQs</span>
-                  </Link>
-                </div>
-                <div className="space-y-2 pt-4">
-                  <div className="relative">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search tools..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-8 w-full"
-                    />
+            <SheetContent side="right" className="w-[80%] flex flex-col">
+              <SheetHeader>
+                <SheetTitle className="text-left">Menu</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col space-y-2 mt-4">
+                <Link to="/" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/") && "bg-accent")}>Home</Link>
+                
+                <div className="py-2 px-4 space-y-1">
+                  <div className="flex items-center justify-between cursor-pointer group mb-2">
+                    <span className="font-medium">Text Formatting Tools</span>
+                    <ChevronDown className="h-4 w-4 group-data-[state=open]:rotate-180 transition-transform" />
                   </div>
-                  <Link
-                    to="/tools"
-                    className="block"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Button variant="secondary" className="w-full">
-                      Start Tweaking
-                    </Button>
-                  </Link>
+                  <div className="ml-4 flex flex-col space-y-2">
+                    <Link to="/linkedin-formatter" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/linkedin-formatter") && "bg-accent")}>LinkedIn Formatter</Link>
+                    <Link to="/bold-text" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/bold-text") && "bg-accent")}>Bold Text Generator</Link>
+                    <Link to="/italic-text" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/italic-text") && "bg-accent")}>Italic Text Generator</Link>
+                    <Link to="/online-text-underliner" onClick={() => setOpen(false)} className={cn("py-2 px-2 rounded-md hover:bg-accent", isActive("/online-text-underliner") && "bg-accent")}>Underline Text Generator</Link>
+                  </div>
                 </div>
+                
+                <Link to="/about" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/about") && "bg-accent")}>About</Link>
+                <Link to="/contact" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/contact") && "bg-accent")}>Contact</Link>
+                <Link to="/blog" onClick={() => setOpen(false)} className={cn("text-left py-2 px-4 rounded-md hover:bg-accent", isActive("/blog") && "bg-accent")}>Blog</Link>
               </div>
             </SheetContent>
           </Sheet>
