@@ -1,0 +1,18 @@
+
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About Text Tweaker - Our Mission & Text Formatting Tools",
+  "description": "Learn about Text Tweaker's mission to make text formatting accessible to everyone. Discover our story, our tools, and why thousands trust us for their text formatting needs.",
+  "url": "https://texttweaker.com/about",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Text Tweaker",
+    "url": "https://texttweaker.com",
+    "logo": "https://texttweaker.com/logo.png",
+    "description": "Text Tweaker provides free online text formatting tools to enhance content for social media, blogs, and more.",
+    "slogan": "Your ultimate toolbox for text formatting and style optimization",
+    "foundingDate": "2023",
+    "email": "support@texttweaker.com"
+  }
+}

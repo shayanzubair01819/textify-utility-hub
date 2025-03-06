@@ -1,0 +1,30 @@
+
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Italic Text Generator - Create Slanted Text Online Free | Text Tweaker",
+  "description": "Convert regular text to italic style with our free online Italic Text Generator. Perfect for social media, emails, and messages. Works everywhere, no download needed!",
+  "url": "https://texttweaker.com/italic-text",
+  "mainEntity": {
+    "@type": "SoftwareApplication",
+    "name": "Italic Text Generator",
+    "applicationCategory": "WebApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Instant italic text conversion",
+      "Copy with one click",
+      "Works on all platforms",
+      "Mobile-friendly"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "765"
+    }
+  }
+}

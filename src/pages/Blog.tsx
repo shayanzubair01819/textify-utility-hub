@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -9,8 +8,16 @@ import { FeaturedPosts } from "@/components/blog/FeaturedPosts";
 import { BlogGrid } from "@/components/blog/BlogGrid";
 import { BlogSidebar } from "@/components/blog/BlogSidebar";
 import { BlogPagination } from "@/components/blog/BlogPagination";
+import { useSEO } from "@/hooks/useSEO";
 
 const Blog = () => {
+  useSEO({
+    title: "Text Formatting Blog - Tips & Tutorials | Text Tweaker",
+    description: "Discover text formatting tips, tricks and best practices for social media, websites, and professional communication on the Text Tweaker Blog.",
+    canonicalPath: "/blog",
+    schemaPath: "/schemas/blog-schema.json"
+  });
+
   return (
     <div className="min-h-screen bg-slate-50">
       <BlogHero />

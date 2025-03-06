@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Card,
@@ -12,8 +11,16 @@ import { FAQ } from "@/components/contact/FAQ";
 import { SocialLinks } from "@/components/contact/SocialLinks";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageSquare, Globe } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const Contact = () => {
+  useSEO({
+    title: "Contact Text Tweaker - Get Support & Send Feedback",
+    description: "Have questions or suggestions about our text formatting tools? Contact the Text Tweaker team for support, feedback, or partnership opportunities.",
+    canonicalPath: "/contact",
+    schemaPath: "/schemas/contact-schema.json"
+  });
+
   const scrollToForm = () => {
     const formElement = document.getElementById("contact-form");
     formElement?.scrollIntoView({ behavior: "smooth" });

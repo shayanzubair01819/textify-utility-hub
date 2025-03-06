@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { TextEditor } from "@/components/LinkedInTextEditor";
 import { Toaster } from "@/components/ui/toaster";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ListOrdered, LinkedinIcon, ArrowUp, Sparkles } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
+
 const LinkedInFormatter = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  
+  useSEO({
+    title: "LinkedIn Text Formatter - Format LinkedIn Posts & Profile | Text Tweaker",
+    description: "Enhance your LinkedIn presence with our free LinkedIn Text Formatter. Create professional, eye-catching posts, headlines, and messages that stand out in your network!",
+    canonicalPath: "/linkedin-formatter",
+    schemaPath: "/schemas/linkedin-formatter-schema.json"
+  });
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   };
+
   const scrollToEditor = () => {
     const editorElement = document.querySelector(".text-editor-section");
     if (editorElement) {
@@ -22,6 +32,7 @@ const LinkedInFormatter = () => {
       });
     }
   };
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 500);
@@ -29,6 +40,7 @@ const LinkedInFormatter = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return <div className="min-h-screen bg-slate-50">
       {/* Header Section */}
       
@@ -171,4 +183,5 @@ const LinkedInFormatter = () => {
         </button>}
     </div>;
 };
+
 export default LinkedInFormatter;

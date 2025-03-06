@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -14,8 +13,16 @@ import {
   Briefcase,
   Mail,
 } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const About = () => {
+  useSEO({
+    title: "About Text Tweaker - Our Mission & Text Formatting Tools",
+    description: "Learn about Text Tweaker's mission to make text formatting accessible to everyone. Discover our story, our tools, and why thousands trust us for their text formatting needs.",
+    canonicalPath: "/about",
+    schemaPath: "/schemas/about-schema.json"
+  });
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section with improved gradient and spacing */}
@@ -238,4 +245,3 @@ const About = () => {
 };
 
 export default About;
-

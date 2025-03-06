@@ -1,10 +1,59 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Bold, Italic, Underline, Strikethrough, Type, Sparkles, ChevronRight, Search, GraduationCap, Users, Code, Briefcase, ArrowRight, Wand2, FileText, List, CaseUpper } from "lucide-react";
 import { Link } from "react-router-dom";
+
 const Index = () => {
+  useEffect(() => {
+    // Set page-specific metadata
+    document.title = "Text Tweaker - Free Online Text Formatting Tools";
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute("content", "Transform your text with our free online text formatting tools. Bold, italic, underline, and fancy fonts for social media, blogs, and more!");
+    }
+
+    // Update canonical link
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute("href", "https://texttweaker.com");
+    }
+
+    // Load page-specific schema
+    const loadSchema = async () => {
+      try {
+        const schemaResponse = await fetch('/schemas/home-schema.json');
+        const schemaData = await schemaResponse.json();
+        
+        // Find existing schema or create new one
+        let schemaScript = document.getElementById('page-specific-schema');
+        if (!schemaScript) {
+          schemaScript = document.createElement('script');
+          schemaScript.id = 'page-specific-schema';
+          schemaScript.type = 'application/ld+json';
+          document.head.appendChild(schemaScript);
+        }
+        
+        schemaScript.textContent = JSON.stringify(schemaData);
+      } catch (error) {
+        console.error('Error loading schema:', error);
+      }
+    };
+    
+    loadSchema();
+    
+    // Cleanup function
+    return () => {
+      const schemaScript = document.getElementById('page-specific-schema');
+      if (schemaScript) {
+        schemaScript.remove();
+      }
+    };
+  }, []);
+
   return <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-white to-slate-50 py-16 px-4 sm:px-6 lg:px-8">
@@ -239,9 +288,7 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      
     </div>;
 };
+
 export default Index;

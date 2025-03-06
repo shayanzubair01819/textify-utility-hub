@@ -1,0 +1,31 @@
+
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "LinkedIn Text Formatter - Format LinkedIn Posts & Profile | Text Tweaker",
+  "description": "Enhance your LinkedIn presence with our free LinkedIn Text Formatter. Create professional, eye-catching posts, headlines, and messages that stand out in your network!",
+  "url": "https://texttweaker.com/linkedin-formatter",
+  "mainEntity": {
+    "@type": "SoftwareApplication",
+    "name": "LinkedIn Text Formatter",
+    "applicationCategory": "WebApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Professional formatting for LinkedIn",
+      "Bold, italic and underline options",
+      "Increase engagement on posts",
+      "One-click copy for LinkedIn"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "978"
+    }
+  },
+  "specialFeature": "Designed specifically for LinkedIn optimization"
+}

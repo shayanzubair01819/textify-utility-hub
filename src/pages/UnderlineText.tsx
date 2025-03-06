@@ -1,15 +1,21 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { UnderlineTextEditor } from "@/components/UnderlineTextEditor";
 import { Toaster } from "@/components/ui/toaster";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ListOrdered, Underline, ArrowUp, Sparkles, Bold, Italic } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 
 const UnderlineText = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useSEO({
+    title: "Underline Text Generator - Add Underlines to Text Online Free | Text Tweaker",
+    description: "Create underlined text instantly with our free Underline Text Generator. Perfect for emphasizing important points on social media, emails, and documents. No sign-up required!",
+    canonicalPath: "/underline-text",
+    schemaPath: "/schemas/underline-text-schema.json"
+  });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

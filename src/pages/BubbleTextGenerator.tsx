@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import BubbleTextGeneratorTool from "@/components/BubbleTextGeneratorTool";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,9 +5,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ListOrdered, Circle, ArrowUp, Sparkles, Square, Hash } from "lucide-react";
+import { useSEO } from "@/hooks/useSEO";
 
 const BubbleTextGenerator = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useSEO({
+    title: "Bubble Text Generator - Create Circle Text Online Free | Text Tweaker",
+    description: "Transform regular text into fun bubble and circle letters with our free Bubble Text Generator. Perfect for social media profiles, posts, and usernames. No sign-up needed!",
+    canonicalPath: "/bubble-text",
+    schemaPath: "/schemas/bubble-text-schema.json"
+  });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

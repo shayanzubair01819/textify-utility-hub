@@ -1,0 +1,45 @@
+
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Text Formatting Blog - Tips & Tutorials | Text Tweaker",
+  "description": "Discover text formatting tips, tricks and best practices for social media, websites, and professional communication on the Text Tweaker Blog.",
+  "url": "https://texttweaker.com/blog",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Text Tweaker",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://texttweaker.com/logo.png"
+    }
+  },
+  "blogPost": [
+    {
+      "@type": "BlogPosting",
+      "headline": "10 Ways to Make Your Social Media Posts Stand Out",
+      "datePublished": "2024-01-15",
+      "author": {
+        "@type": "Person",
+        "name": "Text Tweaker Team"
+      }
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "How to Format Your LinkedIn Profile for Maximum Impact",
+      "datePublished": "2024-02-10",
+      "author": {
+        "@type": "Person",
+        "name": "Text Tweaker Team"
+      }
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Typography Tips for Digital Marketers",
+      "datePublished": "2024-03-05",
+      "author": {
+        "@type": "Person",
+        "name": "Text Tweaker Team"
+      }
+    }
+  ]
+}

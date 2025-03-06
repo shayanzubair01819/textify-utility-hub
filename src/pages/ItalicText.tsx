@@ -1,15 +1,21 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ItalicTextEditor } from "@/components/ItalicTextEditor";
 import { Toaster } from "@/components/ui/toaster";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ListOrdered, Italic, ArrowUp, Sparkles } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 
 const ItalicText = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useSEO({
+    title: "Italic Text Generator - Create Slanted Text Online Free | Text Tweaker",
+    description: "Convert regular text to italic style with our free online Italic Text Generator. Perfect for social media, emails, and messages. Works everywhere, no download needed!",
+    canonicalPath: "/italic-text",
+    schemaPath: "/schemas/italic-text-schema.json"
+  });
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

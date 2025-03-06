@@ -1,0 +1,21 @@
+
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact Text Tweaker - Get Support & Send Feedback",
+  "description": "Have questions or suggestions about our text formatting tools? Contact the Text Tweaker team for support, feedback, or partnership opportunities.",
+  "url": "https://texttweaker.com/contact",
+  "mainEntity": {
+    "@type": "Organization",
+    "name": "Text Tweaker",
+    "url": "https://texttweaker.com",
+    "logo": "https://texttweaker.com/logo.png",
+    "email": "support@texttweaker.com",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "email": "support@texttweaker.com",
+      "availableLanguage": "English"
+    }
+  }
+}

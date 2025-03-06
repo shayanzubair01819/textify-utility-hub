@@ -1,20 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BoldTextEditor } from "@/components/BoldTextEditor";
 import { Toaster } from "@/components/ui/toaster";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle, ListOrdered, ArrowUp, Sparkles } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 
 const BoldText = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
+  
+  useSEO({
+    title: "Bold Text Generator - Create Bold Text Online Free | Text Tweaker",
+    description: "Use our free Bold Text Generator to instantly create and copy bold text for social media, blogs, messages, and more. No sign-up required, works everywhere!",
+    canonicalPath: "/bold-text",
+    schemaPath: "/schemas/bold-text-schema.json"
+  });
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   };
+
   const scrollToEditor = () => {
     const editorElement = document.querySelector(".text-editor-section");
     if (editorElement) {
@@ -23,6 +32,7 @@ const BoldText = () => {
       });
     }
   };
+
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 500);
@@ -33,15 +43,12 @@ const BoldText = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Text Editor Section */}
       <div className="text-editor-section py-8 px-4">
         <BoldTextEditor />
         <Toaster />
       </div>
 
-      {/* Content Sections */}
       <div className="max-w-4xl mx-auto px-4 pb-16 space-y-12">
-        {/* Introduction */}
         <section className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-4">
             Bold Text Generator – Make Your Text Stand Out
@@ -57,7 +64,6 @@ const BoldText = () => {
           </Button>
         </section>
 
-        {/* Why Use Section */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-6">
             Why Use Bold Text?
@@ -70,7 +76,6 @@ const BoldText = () => {
           </div>
         </section>
 
-        {/* How to Use Section */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-6">
             How to Use Our Bold Text Generator?
@@ -86,7 +91,6 @@ const BoldText = () => {
           </p>
         </section>
 
-        {/* Where to Use Section */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-6">
             Where Can You Use Bold Text?
@@ -99,7 +103,6 @@ const BoldText = () => {
           </div>
         </section>
 
-        {/* Bold Styles Section */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-6">
             Types of Bold Text Styles We Generate
@@ -112,7 +115,6 @@ const BoldText = () => {
           </div>
         </section>
 
-        {/* Trust Badge Section */}
         <div className="text-center py-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full">
             <CheckCircle className="h-5 w-5" />
@@ -120,7 +122,6 @@ const BoldText = () => {
           </div>
         </div>
 
-        {/* FAQ Section */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-6">
             Frequently Asked Questions
@@ -149,7 +150,6 @@ const BoldText = () => {
           </Accordion>
         </section>
 
-        {/* Final CTA */}
         <section className="text-center py-8">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">
             Try the Bold Text Generator Now!
@@ -164,7 +164,6 @@ const BoldText = () => {
         </section>
       </div>
 
-      {/* Sticky scroll to top button */}
       {showScrollTop && <button onClick={scrollToTop} className="fixed bottom-6 right-6 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors" aria-label="Scroll to top">
           <ArrowUp className="h-6 w-6" />
         </button>}
