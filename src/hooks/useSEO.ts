@@ -54,7 +54,8 @@ export const useSEO = ({ title, description, canonicalPath, schemaPath }: SEOPro
         if (!schemaScript) {
           schemaScript = document.createElement('script');
           schemaScript.id = 'page-specific-schema';
-          schemaScript.type = 'application/ld+json';
+          // Use setAttribute for type instead of direct property assignment
+          schemaScript.setAttribute('type', 'application/ld+json');
           document.head.appendChild(schemaScript);
         }
         

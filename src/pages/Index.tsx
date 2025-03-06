@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,7 +34,8 @@ const Index = () => {
         if (!schemaScript) {
           schemaScript = document.createElement('script');
           schemaScript.id = 'page-specific-schema';
-          schemaScript.type = 'application/ld+json';
+          // Use setAttribute for type instead of direct property assignment
+          schemaScript.setAttribute('type', 'application/ld+json');
           document.head.appendChild(schemaScript);
         }
         
