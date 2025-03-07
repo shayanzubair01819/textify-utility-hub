@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -774,4 +775,11 @@ export const ArticleFormattingTool = () => {
       <div className="mt-8 space-y-6">
         <h2 className="text-xl sm:text-2xl font-bold text-primary">Article Formatting Tool – Structure & Format Your Articles Effortlessly</h2>
         <p className="text-slate-700">
-          Want to make your
+          Want to make your articles more readable and engaging? Our free article formatting tool helps you optimize content with formatting options, readability analysis, and easy export capabilities.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default ArticleFormattingTool;
