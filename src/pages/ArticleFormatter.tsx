@@ -2,7 +2,9 @@
 import React from 'react';
 import { useSEO } from '@/hooks/useSEO';
 import ArticleFormattingTool from '@/components/ArticleFormattingTool';
-import { CheckCircle2, FileText, FileEdit, BookOpen, PenTool, UserCheck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CheckCircle2, FileText, FileEdit, BookOpen, PenTool, UserCheck, ArrowRight, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ArticleFormatter = () => {
   useSEO({
@@ -44,6 +46,14 @@ const ArticleFormatter = () => {
               <p>Copy & paste formatted text with one click</p>
             </div>
           </div>
+
+          {/* New CTA Button */}
+          <div className="flex justify-center mt-6">
+            <Button size="lg" className="group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Start Formatting Your Article Now
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
         </section>
 
         <hr className="border-slate-200" />
@@ -69,6 +79,14 @@ const ArticleFormatter = () => {
               <div className="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0">3</div>
               <p className="pt-1">Click "Copy" and paste the properly formatted article wherever you need it – blogs, documents, or emails.</p>
             </div>
+          </div>
+
+          {/* New CTA Button */}
+          <div className="flex justify-center mt-6">
+            <Button variant="outline" size="lg" className="group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Try It For Free
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </section>
 
@@ -113,6 +131,14 @@ const ArticleFormatter = () => {
                 <span className="font-medium">Freelancers & Copywriters</span> – Save time formatting client articles and marketing content.
               </div>
             </div>
+          </div>
+
+          {/* New CTA Button */}
+          <div className="flex justify-center mt-6">
+            <Button variant="secondary" size="lg" className="group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Format Your Content Now
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </section>
 
@@ -192,6 +218,14 @@ const ArticleFormatter = () => {
               <p className="font-medium">Try it now and see the difference! 🚀</p>
             </div>
           </div>
+
+          {/* New CTA Button */}
+          <div className="flex justify-center mt-6">
+            <Button size="lg" className="group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Start Formatting Your Text
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
         </section>
 
         <hr className="border-slate-200" />
@@ -205,6 +239,113 @@ const ArticleFormatter = () => {
           <p className="text-center">
             Use the tool above to instantly format your content for better structure, readability, and SEO. Save time and ensure your articles look clean, professional, and easy to read.
           </p>
+          
+          {/* New CTA Button */}
+          <div className="flex justify-center mt-4">
+            <Button size="lg" className="group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Get Started for Free
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        </section>
+
+        <hr className="border-slate-200" />
+
+        {/* NEW: Other Tools You May Like Section */}
+        <section className="space-y-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-primary">
+            Other Tools You May Like
+          </h2>
+          
+          <p className="text-center text-slate-700">
+            Explore our other free text formatting and content creation tools
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-slate-100">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <FileText className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Bold Text Generator</h3>
+              <p className="text-slate-600 mb-4">Convert your text to bold format for social media, messaging, and more.</p>
+              <Link to="/bold-text">
+                <Button variant="outline" className="w-full group">
+                  Try It Now
+                  <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-slate-100">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <PenTool className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Italic Text Generator</h3>
+              <p className="text-slate-600 mb-4">Create italic text for emphasis in your documents and online content.</p>
+              <Link to="/italic-text">
+                <Button variant="outline" className="w-full group">
+                  Try It Now
+                  <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-slate-100">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <FileEdit className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Underline Text Generator</h3>
+              <p className="text-slate-600 mb-4">Generate underlined text to highlight important information.</p>
+              <Link to="/underline-text">
+                <Button variant="outline" className="w-full group">
+                  Try It Now
+                  <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-slate-100">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">LinkedIn Text Formatter</h3>
+              <p className="text-slate-600 mb-4">Optimize your LinkedIn posts for maximum engagement and impact.</p>
+              <Link to="/linkedin-formatter">
+                <Button variant="outline" className="w-full group">
+                  Try It Now
+                  <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-slate-100">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <FileText className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Bubble Text Generator</h3>
+              <p className="text-slate-600 mb-4">Convert your text into fun bubble letters for creative projects.</p>
+              <Link to="/bubble-text-generator">
+                <Button variant="outline" className="w-full group">
+                  Try It Now
+                  <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border border-slate-100">
+              <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                <PenTool className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Case Converter Tool</h3>
+              <p className="text-slate-600 mb-4">Convert text between uppercase, lowercase, title case, and more.</p>
+              <Link to="/case-converter">
+                <Button variant="outline" className="w-full group">
+                  Try It Now
+                  <ExternalLink className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+          </div>
         </section>
       </div>
     </div>
