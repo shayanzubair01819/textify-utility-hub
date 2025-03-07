@@ -15,5 +15,13 @@
     "@type": "AggregateRating",
     "ratingValue": "4.7",
     "ratingCount": "128"
-  }
+  },
+  "featureList": [
+    "Automatic heading and subheading formatting",
+    "Bullet points and numbered lists",
+    "Bold, italic and underline formatting",
+    "Paragraph spacing and indentation",
+    "SEO-optimized formatting",
+    "Easy copy and paste functionality"
+  ]
 }
