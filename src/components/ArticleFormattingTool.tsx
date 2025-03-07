@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -99,8 +98,8 @@ export const ArticleFormattingTool = () => {
       // Filter to words that appear more than once
       const filteredDensity: Record<string, number> = {};
       Object.entries(wordFrequency)
-        .filter(([_, count]) => count > 1)
-        .sort(([_, countA], [_, countB]) => countB - countA)
+        .filter(([word, count]) => count > 1)
+        .sort(([wordA, countA], [wordB, countB]) => countB - countA)
         .slice(0, 10) // Top 10 most frequent words
         .forEach(([word, count]) => {
           filteredDensity[word] = Math.round((count / wordCount) * 100);
@@ -775,146 +774,4 @@ export const ArticleFormattingTool = () => {
       <div className="mt-8 space-y-6">
         <h2 className="text-xl sm:text-2xl font-bold text-primary">Article Formatting Tool – Structure & Format Your Articles Effortlessly</h2>
         <p className="text-slate-700">
-          Want to make your articles look professional and well-structured? Use our Article Formatting Tool to instantly format your text with proper headings, paragraph spacing, bullet points, and more. Whether you're writing a blog post, essay, or report, this tool ensures that your content is readable, engaging, and SEO-friendly.
-        </p>
-        
-        <ul className="space-y-2">
-          <li className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Automatically structure your articles with proper headings</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Improve readability with paragraph spacing & bullet points</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Format text for blogs, essays, reports & online publications</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Copy & paste formatted text with one click</span>
-          </li>
-        </ul>
-        
-        <h2 className="text-xl sm:text-2xl font-bold text-primary mt-8">How to Use the Article Formatting Tool?</h2>
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Format Your Articles in Just 3 Easy Steps</h3>
-          <ol className="space-y-4">
-            <li className="flex items-start gap-3">
-              <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">1</div>
-              <p>Enter or paste your article into the input box.</p>
-            </li>
-            <li className="flex items-start gap-3">
-              <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">2</div>
-              <p>Select formatting options – apply headings, bold/italic text, bullet points, and paragraph spacing.</p>
-            </li>
-            <li className="flex items-start gap-3">
-              <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">3</div>
-              <p>Click "Copy" and paste the properly formatted article wherever you need it – blogs, documents, or emails.</p>
-            </li>
-          </ol>
-        </div>
-        
-        <h2 className="text-xl sm:text-2xl font-bold text-primary mt-8">Where Can You Use This Tool?</h2>
-        <h3 className="text-lg font-semibold">Perfect for Bloggers, Writers & Content Creators</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div className="p-4 border rounded-lg bg-white">
-            <h4 className="font-medium mb-2">Blog Writing & Publishing</h4>
-            <p className="text-sm text-slate-600">Structure your blog posts with H1, H2, and H3 tags for better SEO.</p>
-          </div>
-          <div className="p-4 border rounded-lg bg-white">
-            <h4 className="font-medium mb-2">SEO Articles</h4>
-            <p className="text-sm text-slate-600">Format articles for online publishing with proper paragraph breaks and keyword placement.</p>
-          </div>
-          <div className="p-4 border rounded-lg bg-white">
-            <h4 className="font-medium mb-2">Academic & Research Papers</h4>
-            <p className="text-sm text-slate-600">Ensure correct formatting for essays, reports, and thesis documents.</p>
-          </div>
-          <div className="p-4 border rounded-lg bg-white">
-            <h4 className="font-medium mb-2">Business Documents</h4>
-            <p className="text-sm text-slate-600">Create well-structured reports, proposals, and presentations.</p>
-          </div>
-          <div className="p-4 border rounded-lg bg-white md:col-span-2">
-            <h4 className="font-medium mb-2">Freelancers & Copywriters</h4>
-            <p className="text-sm text-slate-600">Save time formatting client articles and marketing content.</p>
-          </div>
-        </div>
-        
-        <h2 className="text-xl sm:text-2xl font-bold text-primary mt-8">Why Choose Our Article Formatting Tool?</h2>
-        <h3 className="text-lg font-semibold">Features That Make Your Writing Stand Out</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-          <div className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Automatic Heading & Subheading Formatting – Convert text into properly structured content.</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Bullet Points & Numbered Lists – Organize key points effortlessly.</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Bold, Italic & Underline Formatting – Highlight important sections for better readability.</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Paragraph Spacing & Indentation – Ensure clear separation between sections.</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>SEO-Optimized Formatting – Apply the best practices for online publishing.</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <CheckIcon className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-            <span>Easy Copy & Paste Functionality – No extra effort needed—just generate, copy, and use!</span>
-          </div>
-        </div>
-        
-        <h2 className="text-xl sm:text-2xl font-bold text-primary mt-8">Examples of Article Formatting</h2>
-        <h3 className="text-lg font-semibold">See How Your Text Can Look After Formatting</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-          <div className="p-4 border rounded-lg bg-slate-50">
-            <h4 className="font-medium mb-2">Before Formatting:</h4>
-            <p className="text-sm text-slate-600 whitespace-pre-wrap">article formatting is important for readability seo and user experience without structure content looks cluttered and hard to read</p>
-          </div>
-          <div className="p-4 border rounded-lg bg-white">
-            <h4 className="font-medium mb-2">After Using the Tool:</h4>
-            <div className="text-sm space-y-2">
-              <h5 className="font-bold">Why Article Formatting is Important</h5>
-              <p>Proper article formatting enhances readability, SEO, and user experience. Without a clear structure, content appears cluttered and difficult to read.</p>
-              <ul className="pl-5 space-y-1">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">🟢</span>
-                  <span>Bullet points help break down information.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">🟢</span>
-                  <span>Headings guide readers through key sections.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">🟢</span>
-                  <span>Bold & Italic text highlights important details.</span>
-                </li>
-              </ul>
-              <p>Try it now and see the difference! 🚀</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-8 p-6 bg-slate-50 rounded-lg text-center">
-          <h2 className="text-xl font-bold text-primary mb-4">Format Your Article Now!</h2>
-          <p className="mb-4">Use the tool above to instantly format your content for better structure, readability, and SEO. Save time and ensure your articles look clean, professional, and easy to read.</p>
-          <Button className="mt-2" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            Get Started
-          </Button>
-        </div>
-      </div>
-
-      <div className="text-center text-xs sm:text-sm text-slate-500 mt-4">
-        <p>Keyboard shortcuts: Ctrl/Cmd + B (Bold), Ctrl/Cmd + I (Italic), Ctrl/Cmd + U (Underline), Ctrl/Cmd + S (Save)</p>
-      </div>
-    </div>
-  );
-};
-
-export default ArticleFormattingTool;
+          Want to make your
